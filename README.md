@@ -1,7 +1,20 @@
 
 # Electrocardiogram Experiment
 
-## Goal
+## About the project
+
+This is a project performed in SKKU **Design and Analysis of
+Experiments** [(Lee 2021)](https://www.kwonsanglee.com).
+
+-   Conduct a real randomized experiment, collect data, and analyze
+    them.
+-   Present a non-statistical paper using an (quasi-)experiment in the
+    field outside statistics and critize them.
+-   Bring my own research that is related to an (quasi-)experiment.
+
+I chose real experimental design, the first one.
+
+## Goal of the Experiment
 
 -   **Does caffeine affect electrocardiogram (ECG)?**
 -   Caffeine: drinking capsule coffee 40 ml
@@ -182,6 +195,14 @@ sample(LETTERS[1:4])
 Box, George E. P., J. Stuart Hunter, and William G. Hunter. 2005.
 *Statistics for Experimenters: Design, Innovation, and Discovery*.
 Wiley-Interscience.
+
+</div>
+
+<div id="ref-sta5031" class="csl-entry">
+
+Lee, Kwonsang. 2021. “Design and Analysis of Experiments (Sta5031).”
+Department of Statistics, Sungkyunkwan University;
+<https://icampus.skku.edu>.
 
 </div>
 

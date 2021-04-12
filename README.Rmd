@@ -17,7 +17,17 @@ options(digits = 3)
 
 # Electrocardiogram Experiment
 
-## Goal
+## About the project
+
+This is a project performed in SKKU **Design and Analysis of Experiments** [[@sta5031]](https://www.kwonsanglee.com).
+
+- Conduct a real randomized experiment, collect data, and analyze them.
+- Present a non-statistical paper using an (quasi-)experiment in the field outside statistics and critize them.
+- Bring my own research that is related to an (quasi-)experiment.
+
+I chose real experimental design, the first one.
+
+## Goal of the Experiment
 
 - **Does caffeine affect electrocardiogram (ECG)?**
 - Caffeine: drinking capsule coffee 40 ml
