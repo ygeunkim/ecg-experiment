@@ -1,0 +1,114 @@
+---
+title: "Electrocardiogram Experiment"
+subtitle: "using latin square design"
+author: |
+  | [Young Geun Kim](mailto:dudrms33@g.skku.edu)
+  | [ygeunkim.github.io](https://ygeunkim.github.io)
+institute: "2019711358, [Department of Statistics](https://stat.skku.edu/stat/index.jsp)"
+date: "`r format(Sys.time(), '%d %b, %Y')`"
+bibliography: "../docs/ecgref.bib"
+# biblio-style: "apalike"
+link-citations: yes
+nocite: |
+  @sta5031
+output: 
+  beamer_presentation:
+    toc: yes
+    slide_level: 2
+    theme: "Darmstadt"
+    colortheme: "beaver"
+    fonttheme: "professionalfonts"
+    citation_package: biblatex
+    includes:
+      in_header: "../docs/preamble.tex"
+knit:
+  (function(inputFile, encoding) {
+    rmarkdown::render(input = inputFile, encoding = encoding, output_dir = "../static/slides")
+  })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  out.width = "70%",
+  fig.align = "center",
+  fig.width = 6,
+  # fig.pos = "H",
+  fig.asp = .618
+  )
+knitr::knit_hooks$set(
+  document = function(x) {
+    sub("\\usepackage[]{color}", "\\usepackage{xcolor}", x, fixed = TRUE)
+  }
+)
+options(digits = 3)
+options(kableExtra.latex.load_packages = FALSE)
+is_latex <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "latex"
+is_beamer <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "beamer"
+```
+
+```{r pkgs, message=FALSE, echo=FALSE}
+# tidyverse family---------------------
+library(tidyverse)
+# kable--------------------------------
+library(knitr)
+library(kableExtra)
+# set seed for report -----------------
+set.seed(1)
+```
+
+# Introduction
+
+## Electrocardiogram Experiment
+
+## Latin Square Design
+
+
+<!-- details of the design -->
+
+# Design and the Data
+
+## Block Components
+
+## Factor
+
+## Randomization
+
+## Output
+
+## Controlling the Other Variables
+
+### Coffee
+
+- Drink coffee every morning
+- before eating breakfast
+- Nespresso machine: [Pixie C61](https://www.nespresso.com/kr/en/order/machines/original/pixie-electric-red-coffee-machine) in my home
+
+### Measure
+
+- Sitting at the table
+- Rest my arms on the table
+
+### Apple watch
+
+- Use the same strip
+    - [Modern buckle](https://www.apple.com/shop/product/MY662AM/A/40mm-scarlet-modern-buckle-small?fnode=a752f02930ae068b20b0bd9682d5cc42653383b01f5d691eb1ced059ce28de220bacf6009213e93e9c00295f48285a7ed49f95a0721d433ea8c006ff7772eb3d0f0dab89c6c9538ff9063124f30717a6)
+    - since its length is fixed
+
+<!-- analysis -->
+
+# Analysis
+
+## ANOVA
+
+<!-- references -->
+
+# Related Contents
+
+## Project Repo
+
+My Github project for this experiment:
+
+[https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment)
+
