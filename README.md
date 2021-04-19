@@ -1,10 +1,10 @@
 
-# Electrocardiogram Experiment
+# 1 Electrocardiogram Experiment
 
-## About the project
+## 1.1 About the project
 
-This is a project performed in SKKU **Design and Analysis of
-Experiments** [(Lee 2021)](https://www.kwonsanglee.com).
+This is a project performed in [SKKU **Design and Analysis of
+Experiments**](https://www.kwonsanglee.com) ([Lee 2021](#ref-sta5031)).
 
 -   Conduct a real randomized experiment, collect data, and analyze
     them.
@@ -14,16 +14,16 @@ Experiments** [(Lee 2021)](https://www.kwonsanglee.com).
 
 I chose real experimental design, the first one.
 
-## Goal of the Experiment
+## 1.2 Goal of the Experiment
 
 -   **Does caffeine affect electrocardiogram (ECG)?**
 -   Caffeine: drinking capsule coffee 40 ml
 -   ECG result: average heart rate
 
-## Design
+## 1.3 Design
 
-We implement Latin square design (Box, Hunter, and Hunter 2005). For
-example,
+We implement Latin square design ([Box, Hunter, and Hunter
+2005](#ref-Box:2005ug)). For example,
 
 <table>
 <caption>
@@ -34,7 +34,7 @@ Latin square example
 <td colspan="2">
 </td>
 <th colspan="5">
-Coffee to water ratio
+Drinking speed
 </th>
 </tr>
 </thead>
@@ -57,7 +57,7 @@ Coffee to water ratio
 </tr>
 <tr>
 <th rowspan="4">
-Drinking speed
+Coffee to water ratio
 </th>
 <td>
 1
@@ -134,7 +134,7 @@ We will randomly allocate treatments A, B, C, and D in the table.
 -   A, B, C, D once in every row,
 -   once in every column
 
-### About factors
+### 1.3.1 About factors
 
 -   Latin square: 4 by 4
 -   2 blocks components
@@ -167,21 +167,21 @@ sample(LETTERS[1:4])
 #> [1] "A" "C" "D" "B"
 ```
 
-### Output
+### 1.3.2 Output
 
 -   Measure ECG using *Apple watch Series 4*: See
     <https://support.apple.com/en-us/HT208955>
 -   Output: **Average Heart rate (in BPM)**
 
-### Controlling other variables
+### 1.3.3 Controlling other variables
 
 -   Drink coffee every morning, before eating breakfast
 -   When Measuring ECG,
     -   sit at my desk
     -   rest arms on a my desk
--   Use same strip for apple watch: [Modern
-    buckle](https://www.apple.com/shop/product/MY662AM/A/40mm-scarlet-modern-buckle-small?fnode=a752f02930ae068b20b0bd9682d5cc42653383b01f5d691eb1ced059ce28de220bacf6009213e93e9c00295f48285a7ed49f95a0721d433ea8c006ff7772eb3d0f0dab89c6c9538ff9063124f30717a6),
-    because its length is fixed.
+-   Use same strip for apple watch: [Nike sport
+    band](https://www.apple.com/shop/product/MX8C2AM/A/40mm-anthracite-black-nike-sport-band-regular?fnode=5e9ad1340eb02decfee1689be9360555f2f276ad270a672413266cfba01ad7b0e20a1c634dbd66eaec20c01170cf533573070d71c910b376e339037f157174b7e6f45e144d64e052e5274d1069eb67b4)
+    of same fit
 -   Nespresso machine: [Pixie
     C61](https://www.nespresso.com/kr/en/order/machines/original/pixie-electric-red-coffee-machine)
     in my home
