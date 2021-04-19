@@ -7,18 +7,17 @@ author: |
 institute: "2019711358, [Department of Statistics](https://stat.skku.edu/stat/index.jsp)"
 date: "`r format(Sys.time(), '%d %b, %Y')`"
 bibliography: "../docs/ecgref.bib"
-# biblio-style: "apalike"
+biblio-style: "apalike"
 link-citations: yes
-nocite: |
-  @sta5031
-output: 
-  beamer_presentation:
+# nocite: "sta5031"
+output:
+  bookdown::beamer_presentation2:
     toc: yes
     slide_level: 2
     theme: "Darmstadt"
     colortheme: "beaver"
     fonttheme: "professionalfonts"
-    citation_package: biblatex
+    citation_package: natbib
     includes:
       in_header: "../docs/preamble.tex"
 knit:
@@ -44,8 +43,11 @@ knitr::knit_hooks$set(
 )
 options(digits = 3)
 options(kableExtra.latex.load_packages = FALSE)
+is_html <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "html"
 is_latex <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "latex"
 is_beamer <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "beamer"
+kable_format <- ifelse(!is_html, "latex", "html")
+kable_format <- ifelse(length(kable_format) == 0, "html", kable_format) # for excecutable
 ```
 
 ```{r pkgs, message=FALSE, echo=FALSE}
@@ -62,20 +64,135 @@ set.seed(1)
 
 ## Electrocardiogram Experiment
 
+::: columns
+
+:::: column
+### Goal
+
+- Does caffeine affect ECG or *heart rate*?
+- Caffeine: *coffee*
+- Output: Average heart rate (BPM)
+
+::::
+
+:::: column
+
+```{r ecgimage, echo=FALSE}
+knitr::include_graphics("../docs/images/ecg-support.jpg")
+```
+
+::::
+
+:::
+
 ## Latin Square Design
 
+```{r, include=FALSE}
+latin <- 
+  tibble(
+    row = rep(1:4, each = 4),
+    col = rep(1:4, 4),
+    trt = c(LETTERS[1:4], c("B", "C", "D", "A"), c("C", "D", "A", "B"), c("D", "A", "B", "A"))
+  )
+```
+
+```{r latindesign, echo=FALSE}
+latin %>% 
+  group_by(row) %>% 
+  pivot_wider(names_from = col, values_from = trt) %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Latin Square Design",
+    col.names = c("Row", 1:4)
+  ) %>% 
+  kable_styling("striped", full_width = FALSE, latex_options = "HOLD_position") %>% 
+  add_header_above(
+    header = c(" " = 1, "Column " = 4),
+    escape = FALSE
+  )
+```
+
+- Each treatment once in each row and column
+- We allocate 4 treatment levels randomly later
 
 <!-- details of the design -->
 
 # Design and the Data
 
-## Block Components
+## Block Factors
+
+::: columns
+
+:::: column
+### Row: Coffee-to-water ratio
+
+1. 1:0 (espresso, 40ml)
+2. 1:2
+3. 1:8
+4. 1:15
+
+### Column: Drinking speed
+
+1. <=5 sec
+2. 5-20 sec
+3. 20-50 sec
+4. 50< sec
+::::
+
+:::: column
+
+```{r espresso, echo=FALSE}
+knitr::include_graphics("../docs/images/espresso.png")
+```
+
+::::
+
+:::
 
 ## Factor
 
+Intake of caffeine [@reddit2020] from [Starbucks by Nespresso](https://athome.starbucks.com/coffees-by-format/nespresso-original/)
+
+1. House blend: 74.5 mg
+2. Sumatra: 54.5 mg
+3. Decaf espresso roast: 3 mg
+4. Just water: 0 mg
+
 ## Randomization
 
+1. Randomly allocate (`1`, `2`, `3`, `4`) to previous (`A`, `B`, `C`, `D`)
+2. Assign to above Table \@ref(tab:latindesign)
+3. Equivalent to random allocation
+
+```{r}
+set.seed(1)
+sample(LETTERS[1:4])
+```
+
+\begin{enumerate}[(A)]
+  \item House blend (74.5 mg)
+  \item Water (0 mg)
+  \item Sumatra (54.5 mg)
+  \item Decaf espresso roast (3 mg)
+\end{enumerate}
+
+## Latin Square
+
+
 ## Output
+
+### Value: Average heart rage
+
+- in BPM
+- Let $Y_{ijk}$
+
+### Measure
+
+- Apple Watch Series 4
+- watchOS 7.3.3 (1.18S830)
+- [ECG app](https://support.apple.com/en-us/HT208955)
+- Algorithm version: 1
 
 ## Controlling the Other Variables
 
@@ -89,12 +206,10 @@ set.seed(1)
 
 - Sitting at the table
 - Rest my arms on the table
-
-### Apple watch
-
 - Use the same strip
-    - [Modern buckle](https://www.apple.com/shop/product/MY662AM/A/40mm-scarlet-modern-buckle-small?fnode=a752f02930ae068b20b0bd9682d5cc42653383b01f5d691eb1ced059ce28de220bacf6009213e93e9c00295f48285a7ed49f95a0721d433ea8c006ff7772eb3d0f0dab89c6c9538ff9063124f30717a6)
-    - since its length is fixed
+    - [Nike sport band](https://www.apple.com/shop/product/MX8C2AM/A/40mm-anthracite-black-nike-sport-band-regular?fnode=5e9ad1340eb02decfee1689be9360555f2f276ad270a672413266cfba01ad7b0e20a1c634dbd66eaec20c01170cf533573070d71c910b376e339037f157174b7e6f45e144d64e052e5274d1069eb67b4)
+    - of same fit (8-th)
+- and other instructions in [https://support.apple.com/en-us/HT208955](https://support.apple.com/en-us/HT208955)
 
 <!-- analysis -->
 
@@ -106,9 +221,13 @@ set.seed(1)
 
 # Related Contents
 
-## Project Repo
+## Project Repo {-}
 
 My Github project for this experiment:
 
 [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment)
+
+\nocite{sta5031}
+
+<div id="refs"></div>
 
