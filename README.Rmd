@@ -1,5 +1,7 @@
 ---
-output: bookdown::github_document2
+output: 
+  bookdown::github_document2:
+    number_sections: false
 bibliography: "docs/ecgref.bib"
 biblio-style: "apalike"
 link-citations: yes
@@ -37,10 +39,10 @@ I chose real experimental design, the first one.
 
 ## Design
 
-We implement Latin square design [@Box:2005ug]. For example,
+We implement Latin square design [@Fisher:1935uc]. For example,
 
 <table>
-  <caption>Latin square example</caption>
+  <caption>Reduced latin square</caption>
   <thead>
     <tr>
       <td colspan = 2></td>
@@ -87,24 +89,22 @@ We implement Latin square design [@Box:2005ug]. For example,
   </tbody>
 </table>
 
-We will randomly allocate treatments A, B, C, and D in the table.
-
 - A, B, C, D once in every row,
 - once in every column
 
 ### About factors
 - Latin square: 4 by 4
-- 2 blocks components
-    - Coffee (40 ml) to water ratio
+- 2 blocking factors
+    - **Row**: Coffee (40 ml) to water ratio
         1. 1:0 (Espresso)
-        2. 1:2
-        3. 1:8
-        4. 1:15
-    - Drinking speed
+        2. 1:2.5 (Water 100 ml)
+        3. 1:5 (Water 200 ml)
+        4. 1:7.5 (Water 300 ml)
+    - **Column**: Drinking speed
         1. <=5 sec
-        2. 5-20 sec
-        3. 20-50 sec
-        4. 50< sec
+        2. 5-15 sec
+        3. 15-30 sec
+        4. 30< sec
 - Interesting factor: [Intake of caffeine](https://www.reddit.com/r/nespresso/comments/id31r5/i_recieved_the_caffiene_content_numbers_for/) from [Starbucks by Nespresso](https://athome.starbucks.com/coffees-by-format/nespresso-original/)
     1. House blend: 74.5 mg
     2. Sumatra: 54.5 mg
@@ -112,7 +112,7 @@ We will randomly allocate treatments A, B, C, and D in the table.
     4. None or water: 0 mg
 - Randomly allocate these treatments `1`, `2`, `3`, and `4` to A, B, C, and D
     - assign these to above table
-    - same as random allocation
+    - random treatment assignment
 
 ```{r}
 set.seed(1)

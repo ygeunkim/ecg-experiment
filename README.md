@@ -1,7 +1,7 @@
 
-# 1 Electrocardiogram Experiment
+# Electrocardiogram Experiment
 
-## 1.1 About the project
+## About the project
 
 This is a project performed in [SKKU **Design and Analysis of
 Experiments**](https://www.kwonsanglee.com) ([Lee 2021](#ref-sta5031)).
@@ -14,20 +14,20 @@ Experiments**](https://www.kwonsanglee.com) ([Lee 2021](#ref-sta5031)).
 
 I chose real experimental design, the first one.
 
-## 1.2 Goal of the Experiment
+## Goal of the Experiment
 
 -   **Does caffeine affect electrocardiogram (ECG)?**
 -   Caffeine: drinking capsule coffee 40 ml
 -   ECG result: average heart rate
 
-## 1.3 Design
+## Design
 
-We implement Latin square design ([Box, Hunter, and Hunter
-2005](#ref-Box:2005ug)). For example,
+We implement Latin square design ([Fisher 1935](#ref-Fisher:1935uc)).
+For example,
 
 <table>
 <caption>
-Latin square example
+Reduced latin square
 </caption>
 <thead>
 <tr>
@@ -129,25 +129,23 @@ C
 </tbody>
 </table>
 
-We will randomly allocate treatments A, B, C, and D in the table.
-
 -   A, B, C, D once in every row,
 -   once in every column
 
-### 1.3.1 About factors
+### About factors
 
 -   Latin square: 4 by 4
--   2 blocks components
-    -   Coffee (40 ml) to water ratio
+-   2 blocking factors
+    -   **Row**: Coffee (40 ml) to water ratio
         1.  1:0 (Espresso)
-        2.  1:2
-        3.  1:8
-        4.  1:15
-    -   Drinking speed
+        2.  1:2.5 (Water 100 ml)
+        3.  1:5 (Water 200 ml)
+        4.  1:7.5 (Water 300 ml)
+    -   **Column**: Drinking speed
         1.  &lt;=5 sec
-        2.  5-20 sec
-        3.  20-50 sec
-        4.  50&lt; sec
+        2.  5-15 sec
+        3.  15-30 sec
+        4.  30&lt; sec
 -   Interesting factor: [Intake of
     caffeine](https://www.reddit.com/r/nespresso/comments/id31r5/i_recieved_the_caffiene_content_numbers_for/)
     from [Starbucks by
@@ -159,7 +157,7 @@ We will randomly allocate treatments A, B, C, and D in the table.
 -   Randomly allocate these treatments `1`, `2`, `3`, and `4` to A, B,
     C, and D
     -   assign these to above table
-    -   same as random allocation
+    -   random treatment assignment
 
 ``` r
 set.seed(1)
@@ -167,13 +165,13 @@ sample(LETTERS[1:4])
 #> [1] "A" "C" "D" "B"
 ```
 
-### 1.3.2 Output
+### Output
 
 -   Measure ECG using *Apple watch Series 4*: See
     <https://support.apple.com/en-us/HT208955>
 -   Output: **Average Heart rate (in BPM)**
 
-### 1.3.3 Controlling other variables
+### Controlling other variables
 
 -   Drink coffee every morning, before eating breakfast
 -   When Measuring ECG,
@@ -190,11 +188,10 @@ sample(LETTERS[1:4])
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Box:2005ug" class="csl-entry">
+<div id="ref-Fisher:1935uc" class="csl-entry">
 
-Box, George E. P., J. Stuart Hunter, and William G. Hunter. 2005.
-*Statistics for Experimenters: Design, Innovation, and Discovery*.
-Wiley-Interscience.
+Fisher, Sir Ronald Aylmer. 1935. *The Design of Experiments*. Oliver &
+Boyd, Edinburgh & London.
 
 </div>
 

@@ -103,7 +103,7 @@ latin %>%
   kable(
     format = kable_format,
     escape = FALSE,
-    caption = "Latin Square Design",
+    caption = "Reduced Latin Square",
     col.names = c("Row", 1:4)
   ) %>% 
   kable_styling("striped", full_width = FALSE, latex_options = "HOLD_position") %>% 
@@ -114,30 +114,33 @@ latin %>%
 ```
 
 - Each treatment once in each row and column
-- We allocate 4 treatment levels randomly later
+- We allocate 4 treatment levels randomly
 
 <!-- details of the design -->
 
 # Design and the Data
 
-## Block Factors
+## Blocking Factors
+
+Caffeine intake depends on the following two factors [@naver2018].
 
 ::: columns
 
 :::: column
+
 ### Row: Coffee-to-water ratio
 
-1. 1:0 (espresso, 40ml)
-2. 1:2
-3. 1:8
-4. 1:15
+1. 1:0 (Espresso, 40 ml)
+2. 1:2.5 (Water 100 ml)
+3. 1:5 (Water 200 ml)
+4. 1:7.5 (Water 300 ml)
 
 ### Column: Drinking speed
 
 1. <=5 sec
-2. 5-20 sec
-3. 20-50 sec
-4. 50< sec
+2. 5-15 sec
+3. 15-30 sec
+4. 30< sec
 ::::
 
 :::: column
@@ -159,11 +162,41 @@ Intake of caffeine [@reddit2020] from [Starbucks by Nespresso](https://athome.st
 3. Decaf espresso roast: 3 mg
 4. Just water: 0 mg
 
-## Randomization
+## Output
+
+::: columns
+
+:::: column
+### Value: Average heart rage
+
+- in BPM
+- Notations from the course [@sta5031]
+
+### Measure
+
+- Apple Watch Series 4
+- watchOS 7.3.3 (1.18S830)
+- [ECG app](https://support.apple.com/en-us/HT208955)
+- Algorithm version: 1
+
+::::
+
+:::: column
+
+```{r watchimage, echo=FALSE}
+knitr::include_graphics("../docs/images/ecg-support-watch.jpg")
+```
+
+::::
+
+:::
+
+<!-- Design -->
+
+## Randomized Assignment
 
 1. Randomly allocate (`1`, `2`, `3`, `4`) to previous (`A`, `B`, `C`, `D`)
 2. Assign to above Table \@ref(tab:latindesign)
-3. Equivalent to random allocation
 
 ```{r}
 set.seed(1)
@@ -179,20 +212,50 @@ sample(LETTERS[1:4])
 
 ## Latin Square
 
+```{r cfdesign, echo=FALSE}
+latin %>% 
+  transmute(
+    Water = case_when(
+      row == 1 ~ "0 ml",
+      row == 2 ~ "100 ml",
+      row == 3 ~ "200 ml",
+      row == 4 ~ "300 ml"
+    ),
+    speed = case_when(
+      col == 1 ~ "<=5",
+      col == 2 ~ "5-15",
+      col == 3 ~ "15-30",
+      col == 4 ~ "30<"
+    ),
+    coffee = case_when(
+      trt == "A" ~ "H(74.5)",
+      trt == "B" ~ "W(0)",
+      trt == "C" ~ "S(54.5)",
+      trt == "D" ~ "D(3)"
+    )
+  ) %>% 
+  group_by(Water) %>% 
+  pivot_wider(names_from = speed, values_from = coffee) %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Design of the Experiment"
+  ) %>% 
+  kable_styling("striped", full_width = FALSE, latex_options = "HOLD_position") %>% 
+  add_header_above(
+    header = c(" " = 1, "Drinking Speed" = 4),
+    escape = FALSE
+  ) %>% 
+  footnote(
+    number = c(
+      "'Water' is the coffee-to-water ratio (divide with 40 ml)",
+      "Numbers in the brackets indicate caffeine (in mg)"
+    )
+  )
+```
 
-## Output
-
-### Value: Average heart rage
-
-- in BPM
-- Let $Y_{ijk}$
-
-### Measure
-
-- Apple Watch Series 4
-- watchOS 7.3.3 (1.18S830)
-- [ECG app](https://support.apple.com/en-us/HT208955)
-- Algorithm version: 1
+- Use *reduced latin square*
+- Randomization test afterward
 
 ## Controlling the Other Variables
 
@@ -215,7 +278,21 @@ sample(LETTERS[1:4])
 
 # Analysis
 
+## Dataset
+
+\tiny
+
+```{r, message=FALSE}
+(ecg <- read_csv("../data/raw/ecg.csv"))
+```
+
+\normalsize
+
 ## ANOVA
+
+## Sharp Null
+
+## Randomization Test
 
 <!-- references -->
 
@@ -226,8 +303,6 @@ sample(LETTERS[1:4])
 My Github project for this experiment:
 
 [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment)
-
-\nocite{sta5031}
 
 <div id="refs"></div>
 
