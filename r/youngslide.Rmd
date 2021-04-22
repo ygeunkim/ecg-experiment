@@ -2,7 +2,7 @@
 title: "Electrocardiogram Experiment"
 subtitle: "using latin square design"
 author: |
-  | [Young Geun Kim](mailto:dudrms33@g.skku.edu)
+  | Young Geun Kim
   | [ygeunkim.github.io](https://ygeunkim.github.io)
 institute: "2019711358, [Department of Statistics](https://stat.skku.edu/stat/index.jsp)"
 date: "`r format(Sys.time(), '%d %b, %Y')`"
@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
   out.width = "70%",
   fig.align = "center",
   fig.width = 6,
-  # fig.pos = "H",
+  fig.pos = "H",
   fig.asp = .618
   )
 knitr::knit_hooks$set(
@@ -261,8 +261,8 @@ latin %>%
 
 ### Coffee
 
-- Drink coffee every morning
-- before eating breakfast
+- Drink coffee every morning (between 8:30 a.m. and 9:00 a.m.)
+- after eating a piece of bread
 - Nespresso machine: [Pixie C61](https://www.nespresso.com/kr/en/order/machines/original/pixie-electric-red-coffee-machine) in my home
 
 ### Measure

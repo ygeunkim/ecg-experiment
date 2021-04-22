@@ -173,7 +173,8 @@ sample(LETTERS[1:4])
 
 ### Controlling other variables
 
--   Drink coffee every morning, before eating breakfast
+-   Drink coffee every morning (between 8:30 a.m. and 9:00 a.m. KST),
+    after eating a piece of bread
 -   When Measuring ECG,
     -   sit at my desk
     -   rest arms on a my desk
