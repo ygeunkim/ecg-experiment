@@ -1,0 +1,100 @@
+---
+title: "Causal Effect of Caffeine on Heart Rate"
+subtitle: "using latin square design"
+author: |
+  | Young Geun Kim
+  | [ygeunkim.github.io](https://ygeunkim.github.io)
+  | 2019711358, [Department of Statistics](https://stat.skku.edu/stat/index.jsp)
+date: "`r format(Sys.time(), '%d %b, %Y')`"
+bibliography: "../docs/ecgref.bib"
+biblio-style: "apalike"
+link-citations: yes
+abstract: |
+  After drinking coffee, one's heartbeat raises. This kind of change in metabolism might be responsible for caffeine. To confirm this, we conduct an experiment. Blocked by coffe-to-water ratio and drinking speed, we build $4 \times 4$ latin square design with caffeine intensity factor. For each cell, we measure heart rate using ECG app installed in Apple Watch (it gives average BPM).
+output: 
+  bookdown::pdf_document2:
+    toc: yes
+    includes:
+      in_header: "../docs/preamble.tex"
+knit:
+  (function(inputFile, encoding) {
+    rmarkdown::render(input = inputFile, encoding = encoding, output_dir = "../static/report")
+  })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  out.width = "70%",
+  fig.align = "center",
+  fig.width = 6,
+  fig.pos = "H",
+  fig.asp = .618
+  )
+knitr::knit_hooks$set(
+  document = function(x) {
+    sub("\\usepackage[]{color}", "\\usepackage{xcolor}", x, fixed = TRUE)
+  }
+)
+options(digits = 3)
+options(kableExtra.latex.load_packages = FALSE)
+is_html <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "html"
+is_latex <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "latex"
+kable_format <- ifelse(!is_html, "latex", "html")
+kable_format <- ifelse(length(kable_format) == 0, "html", kable_format) # for excecutable
+```
+
+```{r pkgs, message=FALSE, echo=FALSE}
+# tidyverse family---------------------
+library(tidyverse)
+# kable--------------------------------
+library(knitr)
+library(kableExtra)
+# set seed for report -----------------
+set.seed(1)
+```
+
+\newpage
+
+# Introduction {#intro}
+
+# Design of the Experiment {#design}
+
+# Data Analysis {#analysis}
+
+# Conclusion {#conclude}
+
+\newpage
+
+<!-- reference here -->
+
+# References {-}
+
+<div id="refs"></div>
+
+\newpage
+
+# (APPENDIX) Appendix {-}
+
+# Appendix
+
+## Codes
+
+```{r get-labels, include=FALSE}
+lbs <- knitr::all_labels()
+lbs <- setdiff(lbs, c("setup", "get-labels", "pkgs"))
+```
+
+Package loading:
+
+```{r ref.label="pkgs", echo=TRUE, eval=FALSE}
+```
+
+## ECG Results
+
+```{r day1, echo=FALSE, fig.cap="(1, 1), House blend (1)"}
+knitr::include_graphics("../docs/images/ecg-2021-04-22-08_36-0900.pdf")
+```
+
+
