@@ -93,8 +93,15 @@ Package loading:
 
 ## ECG Results
 
-```{r day1, echo=FALSE, fig.cap="(1, 1), House blend (1)"}
-knitr::include_graphics("../docs/images/ecg-2021-04-22-08_36-0900.pdf")
+```{r resplot, echo=FALSE, fig.cap="ECG Results", fig.subcap=c("(1, 1), House blend (1)", "(1, 2), Water (4)"), fig.asp=1, fig.ncol = 2, out.width="50%"}
+# (1, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-22.pdf")
+# (1, 2)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-23.pdf")
 ```
+
+
+
+
 
 
