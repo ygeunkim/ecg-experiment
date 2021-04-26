@@ -102,9 +102,10 @@ Package loading:
 
 ```{r, include=FALSE}
 fig_subcap <- c(
-  "(1,1),House blend", "(1,2),Water", "(1,3),Sumatra", "(1,4),Decaf"
+  "(1,1),House blend", "(1,2),Water", "(1,3),Sumatra", "(1,4),Decaf",
+  "(2, 1),Water"
 )
-fig_subcap <- str_c(fig_subcap, str_c(ecg$bpm[1:4], " BPM"), sep = ": ")
+fig_subcap <- str_c(fig_subcap, str_c(ecg$bpm[1:5], " BPM"), sep = ": ")
 ```
 
 
@@ -117,6 +118,8 @@ knitr::include_graphics("../docs/images/ecg-2021-04-23.pdf")
 knitr::include_graphics("../docs/images/ecg-2021-04-24.pdf")
 # (1, 4)----------------------------------------------------
 knitr::include_graphics("../docs/images/ecg-2021-04-25.pdf")
+# (2, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-26.pdf")
 ```
 
 

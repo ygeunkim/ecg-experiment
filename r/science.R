@@ -1,3 +1,7 @@
+# packages------------------------
+library(dplyr)
+library(readr)
+library(tidyr)
 # experiment data------------------
 ecg <- read_csv("data/raw/ecg.csv")
 # pre-process----------------------
