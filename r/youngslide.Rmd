@@ -167,15 +167,15 @@ Intake of caffeine [@reddit2020] from [Starbucks by Nespresso](https://athome.st
 ::: columns
 
 :::: column
-### Value: Average heart rage
+### Value: Average heart rate
 
 - in BPM
 - Notations from the course [@sta5031]
+- Since there exists variation, we consider difference of BPM after and before: $y_{rc}^{post} - y_{rc}^{pre}$
 
 ### Measure
 
 - Apple Watch Series 4
-- watchOS 7.3.3 (1.18S830)
 - [ECG app](https://support.apple.com/en-us/HT208955)
 - Algorithm version: 1
 
@@ -287,6 +287,21 @@ latin %>%
 ```
 
 \normalsize
+
+- `pre`: Before coffee
+- `post`: After coffee
+
+## Post - Pre
+
+\tiny
+
+```{r, message=FALSE}
+(ecg_diff <- read_csv("../data/processed/ecg-diff.csv"))
+```
+
+\normalsize
+
+- Our output becomes `diff` = `post` - `pre`
 
 ## ANOVA
 
