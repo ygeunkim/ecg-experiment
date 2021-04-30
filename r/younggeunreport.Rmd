@@ -103,13 +103,14 @@ Package loading:
 ```{r, include=FALSE}
 fig_subcap <- c(
   "(1,1),House blend", "(1,2),Water", "(1,3),Sumatra", "(1,4),Decaf",
-  "(2,1),Water", "(2,2),Sumatra", "(2,3),Decaf", "(2,4),House blend"
+  "(2,1),Water", "(2,2),Sumatra", "(2,3),Decaf", "(2,4),House blend",
+  "(3,1),Sumatra"
 )
-fig_subcap <- str_c(fig_subcap, str_c(ecg$post[1:8], " BPM"), sep = ": ")
+fig_subcap <- str_c(fig_subcap, str_c(ecg$post[1:9], " BPM"), sep = ": ")
 ```
 
 
-```{r resplot, echo=FALSE, fig.cap="ECG Results", fig.subcap = fig_subcap, fig.asp=1, fig.ncol = 4, out.width="25%"}
+```{r resplot, echo=FALSE, fig.cap="Electrocardiogram after drinking Coffee", fig.subcap = fig_subcap, fig.asp=1, fig.ncol = 4, out.width="25%"}
 # (1, 1)----------------------------------------------------
 knitr::include_graphics("../docs/images/ecg-2021-04-22.pdf")
 # (1, 2)----------------------------------------------------
@@ -126,6 +127,8 @@ knitr::include_graphics("../docs/images/ecg-2021-04-27.pdf")
 knitr::include_graphics("../docs/images/ecg-2021-04-28.pdf")
 # (2, 3)----------------------------------------------------
 knitr::include_graphics("../docs/images/ecg-2021-04-29.pdf")
+# (3, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-30.pdf")
 ```
 
 
