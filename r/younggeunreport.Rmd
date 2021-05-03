@@ -104,9 +104,10 @@ Package loading:
 fig_subcap <- c(
   "(1,1),House blend", "(1,2),Water", "(1,3),Sumatra", "(1,4),Decaf",
   "(2,1),Water", "(2,2),Sumatra", "(2,3),Decaf", "(2,4),House blend",
-  "(3,1),Sumatra", "(3,2),Decaf", "(3,3),House blend", "(3,4),Water"
+  "(3,1),Sumatra", "(3,2),Decaf", "(3,3),House blend", "(3,4),Water",
+  "(4,1),Decaf"
 )
-fig_subcap <- str_c(fig_subcap, str_c(ecg$post[1:12], " BPM"), sep = ": ")
+fig_subcap <- str_c(fig_subcap, str_c(ecg$post[1:13], " BPM"), sep = ": ")
 ```
 
 
@@ -135,6 +136,8 @@ knitr::include_graphics("../docs/images/ecg-2021-05-01.pdf")
 knitr::include_graphics("../docs/images/ecg-2021-05-02.pdf")
 # (3, 4)----------------------------------------------------
 knitr::include_graphics("../docs/images/ecg-2021-05-03.pdf")
+# (4, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-04.pdf")
 ```
 
 
