@@ -280,28 +280,62 @@ latin %>%
 
 ## Dataset
 
-\tiny
-
-```{r, message=FALSE}
-(ecg <- read_csv("../data/raw/ecg.csv"))
+```{r, message=FALSE, echo=FALSE}
+ecg <- read_csv("../data/raw/ecg.csv")
+ecg_diff <- read_csv("../data/processed/ecg-diff.csv")
 ```
 
-\normalsize
-
-- `pre`: Before coffee
-- `post`: After coffee
-
-## Post - Pre
-
-\tiny
-
-```{r, message=FALSE}
-(ecg_diff <- read_csv("../data/processed/ecg-diff.csv"))
+```{r diffdata, echo=FALSE}
+ecg_diff %>% 
+  select(-id, -date) %>% 
+  mutate(
+    water = case_when(
+      water == 1 ~ "0 ml",
+      water == 2 ~ "100 ml",
+      water == 3 ~ "200 ml",
+      water == 4 ~ "300 ml"
+    ),
+    speed = case_when(
+      speed == 1 ~ "<=5",
+      speed == 2 ~ "5-15",
+      speed == 3 ~ "15-30",
+      speed == 4 ~ "30<"
+    ),
+    coffee = case_when(
+      coffee == 1 ~ "HB",
+      coffee == 2 ~ "S",
+      coffee == 3 ~ "D",
+      coffee == 4 ~ "W"
+    )
+  ) %>% 
+  mutate(
+    diff = cell_spec(
+      diff, 
+      color = spec_color(diff, end = .9, direction = -1),
+      font_size = spec_font_size(diff, begin = 8)
+    )
+  ) %>% 
+  unite(coffee, diff, col = "output", sep = ", ") %>% 
+  group_by(water) %>% 
+  pivot_wider(names_from = speed, values_from = output) %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Experiment Data"
+  ) %>% 
+  kable_styling("striped", full_width = FALSE, latex_options = "HOLD_position") %>% 
+  add_header_above(
+    header = c(" " = 1, "Drinking Speed" = 4),
+    escape = FALSE
+  ) %>% 
+  footnote(
+    number = c(
+      "Caffeine: HB > S > D > W",
+      "Numbers indicate the difference after and before taking coffee"
+    )
+  )
 ```
 
-\normalsize
-
-- Our output becomes `diff` = `post` - `pre`
 
 ## ANOVA
 
