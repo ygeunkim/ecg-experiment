@@ -169,7 +169,7 @@ sample(LETTERS[1:4])
 
 -   Measure ECG using *Apple watch Series 4*: See
     <https://support.apple.com/en-us/HT208955>
--   Output: **Average Heart rate (in BPM)**
+-   Output: **Average Heart rate (in BPM)** difference
 
 ### Controlling other variables
 
