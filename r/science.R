@@ -17,7 +17,7 @@ science_ecg <-
       coffee == 3 ~ "De",
       coffee == 4 ~ "W"
     )
-  ) %>% 
+  ) %>%
   pivot_wider(names_from = trt, values_from = diff)
 # sharp null of no effect----------
 sharp_null <- 
