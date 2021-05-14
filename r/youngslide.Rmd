@@ -59,6 +59,10 @@ library(knitr)
 library(kableExtra)
 # LSD randomization--------------------
 library(magic)
+# permutation--------------------------
+library(combinat)
+# parallelization----------------------
+library(foreach)
 # set seed for report -----------------
 set.seed(1)
 ```
@@ -345,6 +349,21 @@ ecg_diff %>%
   )
 ```
 
+## Observed Outcomes
+
+```{r obsouttab, echo=FALSE}
+ecg_diff %>% 
+  select(-id, -date, -coffee) %>% 
+  gen_table(row = water, col = speed, out = diff, add_mean = TRUE) %>% 
+  print_obs(
+    format = kable_format, caption = "Observed Outcomes from LS Experiment", col.names = c(1:4, "Mean")
+  )
+```
+
+- Each cell: $y_{ij}$
+- Column: $\yrbar$
+- Row: $\ycbar$
+- Grand mean: $\ybar$
 
 ## ANOVA
 
@@ -380,7 +399,7 @@ print_anova(ecg_aov, format = kable_format, caption = "ANOVA Table") %>%
 ### Imputing
 
 1. Under the sharp null, impute the missing $Y_{rc}(k)$
-2. Apply the formulation (SSRow, SSCol, SSTre, SSRes, SSTot)
+2. Apply the formulation (SSRow, SSCol, SSTre, SSRes, SSTot) to the units
 
 ::::
 
@@ -393,7 +412,7 @@ ecg_po %>%
   kable(
     format = kable_format,
     escape = FALSE,
-    caption = "Observed Values of the Science Table for the Coffee-ECG Experiment"
+    caption = "Observed Values of the Science Table for the Coffee-ECG Experiment (row 2 and 3 omitted)"
   ) %>% 
   kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position", "scale_down")) %>% 
   add_header_above(
@@ -446,6 +465,105 @@ ecg_sharp %>%
 
 
 ## Randomization Test
+
+<!-- ```{r, echo=FALSE} -->
+<!-- # observed------------------ -->
+<!-- y_obs <- ecg_diff$diff -->
+<!-- row_obs <- ecg_sharp$water -->
+<!-- col_obs <- ecg_sharp$speed -->
+<!-- ecg_size <- nrow(ecg_sharp) -->
+<!-- trt_obs <- ecg_sharp$coffee -->
+<!-- # possible reduced squares---- -->
+<!-- trt1 <- c(c(LETTERS[1:4], c("B", "C", "D", "A"), c("C", "D", "A", "B"), c("D", "A", "B", "A"))) -->
+<!-- trt2 <- c(c(LETTERS[1:4], c("B", "D", "A", "C"), c("C", "A", "D", "B"), c("D", "C", "B", "A"))) -->
+<!-- trt3 <- c(c(LETTERS[1:4], c("B", "A", "D", "C"), c("C", "D", "A", "B"), c("D", "C", "B", "A"))) -->
+<!-- trt4 <- c(c(LETTERS[1:4], c("B", "A", "D", "C"), c("C", "D", "B", "A"), c("D", "C", "A", "B"))) -->
+<!-- # permutation---------------------- -->
+<!-- doMC::registerDoMC(cores = 8) -->
+<!-- f_tre <- foreach(b = seq_len(1000), .combine = rbind) %dopar% { -->
+<!--   latin_form <- sample(1:4, 1) -->
+<!--   rand_trt <- sample(LETTERS[1:4], 4) %>% order() -->
+<!--   ecg_new <- tibble( -->
+<!--     row = row_obs, -->
+<!--     col = col_obs, -->
+<!--     trt = case_when( -->
+<!--       latin_form == 1 ~ trt1, -->
+<!--       latin_form == 2 ~ trt2, -->
+<!--       latin_form == 3 ~ trt3, -->
+<!--       latin_form == 4 ~ trt4 -->
+<!--     ), -->
+<!--     out = y_obs -->
+<!--   ) %>%  -->
+<!--     mutate( -->
+<!--       trt = case_when( -->
+<!--         trt == "A" ~ rand_trt[1], -->
+<!--         trt == "B" ~ rand_trt[2], -->
+<!--         trt == "C" ~ rand_trt[3], -->
+<!--         trt == "D" ~ rand_trt[4] -->
+<!--       ) -->
+<!--     ) -->
+<!--   aov_lsd(out ~ row + col + trt, data = ecg_new) %>%  -->
+<!--     broom::tidy() %>%  -->
+<!--     .$statistic -->
+<!-- } -->
+<!-- # p-value---------------------------- -->
+<!-- p_val <- sum(f_tre[,3] >= ecg_aov$statistic[3]) / 1000 -->
+<!-- ``` -->
+
+
+```{r, echo=FALSE, cache=TRUE}
+num_iter <- 2000
+f_tre <- test_sharp(ecg_sharp, ecg_diff$diff, num_iter, 4, c("water", "speed", "coffee"), 8)
+p_val <- sum(f_tre >= ecg_aov$statistic[3]) / num_iter
+```
+
+- Following the same step we learn in the class [@sta5031]
+- Iterating `r num_iter` times
+- p-value is:
+
+$$pvalue = `r p_val`$$
+
+i.e. Not significant as in ANOVA table (p-value of $`r ecg_aov$p.value[3]`$)
+
+## Randomization Distribution
+
+See the histogram.
+
+```{r randhist, echo=FALSE, fig.cap="Randomization Distribution of $F_{Tre}$ under the Null"}
+tibble(f_stat = f_tre) %>% 
+  ggplot(aes(x = f_stat)) +
+  geom_histogram(binwidth = .1) +
+  geom_vline(xintercept = ecg_aov$statistic[3], col = I("red")) +
+  theme_minimal() +
+  labs(
+    x = element_blank(),
+    y = "Frequency"
+  )
+```
+
+
+# Conclusion
+
+## Conclusion
+
+- Recall: $H_0: y_{rc}(1) = y_{rc}(2) = y_{rc}(3) = y_{rc}(4)$
+- i.e. Caffeine's effect on average heart rate
+- We expected the effect was significant
+- However, there was *no significant evidence* (p-value of `r p_val`)
+
+## Discussion
+
+Why this result?
+
+- I have taken coffee everyday
+- so a cup of coffee might not affect me individually
+- **Outliers**: Unit `8` seems outliers (Table \@ref(tab:diffdata))
+
+## Future study
+
+- Other samples
+- Re-measure
+
 
 <!-- references -->
 
