@@ -4,3 +4,7 @@
 .Ruserdata
 images/
 *.log
+youngslide_cache/
+youngslide_files/
+younggeunreport_cache/
+younggeunreport_files/
