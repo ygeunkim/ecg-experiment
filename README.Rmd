@@ -29,7 +29,10 @@ This is a project performed in [SKKU **Design and Analysis of Experiments**](htt
 - Present a non-statistical paper using an (quasi-)experiment in the field outside statistics and critize them.
 - Bring my own research that is related to an (quasi-)experiment.
 
-I chose real experimental design, the first one.
+I chose real experimental design, the first one. The followings are my works:
+
+1. [Project presentation](https://github.com/ygeunkim/ecg-experiment/blob/master/static/slides/youngslide.pdf)
+2. Reprot (Still working)
 
 ## Goal of the Experiment
 
@@ -121,7 +124,7 @@ sample(LETTERS[1:4])
 
 ### Output
 - Measure ECG using *Apple watch Series 4*: See [https://support.apple.com/en-us/HT208955](https://support.apple.com/en-us/HT208955)
-- Output: **Average Heart rate (in BPM)** difference
+- Output: **Average Heart rate (in BPM) difference** between after and before taking the coffee
 
 ### Controlling other variables
 - Drink coffee every morning (between 8:30 a.m. and 9:00 a.m. KST), after eating a piece of bread

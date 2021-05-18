@@ -12,7 +12,12 @@ Experiments**](https://www.kwonsanglee.com) ([Lee 2021](#ref-sta5031)).
     field outside statistics and critize them.
 -   Bring my own research that is related to an (quasi-)experiment.
 
-I chose real experimental design, the first one.
+I chose real experimental design, the first one. The followings are my
+works:
+
+1.  [Project
+    presentation](https://github.com/ygeunkim/ecg-experiment/blob/master/static/slides/youngslide.pdf)
+2.  Reprot (Still working)
 
 ## Goal of the Experiment
 
@@ -169,7 +174,8 @@ sample(LETTERS[1:4])
 
 -   Measure ECG using *Apple watch Series 4*: See
     <https://support.apple.com/en-us/HT208955>
--   Output: **Average Heart rate (in BPM)** difference
+-   Output: **Average Heart rate (in BPM) difference** between after and
+    before taking the coffee
 
 ### Controlling other variables
 
