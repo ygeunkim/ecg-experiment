@@ -14,10 +14,10 @@ gen_table <- function(data, row, col, out, add_mean = FALSE) {
   if (add_mean) {
     latin %>% 
       column_to_rownames(var = "row") %>% 
-      mutate(MEAN = rowMeans(.)) %>% 
-      bind_rows(MEAN = colMeans(.)) %>% 
+      mutate(Mean = rowMeans(.)) %>% 
+      bind_rows(Mean = colMeans(.)) %>% 
       rownames_to_column(var = "row") %>% 
-      mutate(row = str_replace_all(row, pattern = str_c("\\...", nrow(.)), replacement = "MEAN"))
+      mutate(row = str_replace_all(row, pattern = str_c("\\...", nrow(.)), replacement = "Mean"))
   } else {
     latin
   }
