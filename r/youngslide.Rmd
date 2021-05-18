@@ -5,11 +5,10 @@ author: |
   | Young Geun Kim
   | [ygeunkim.github.io](https://ygeunkim.github.io)
 institute: "2019711358, [Department of Statistics](https://stat.skku.edu/stat/index.jsp)"
-date: "`r format(Sys.time(), '%d %b, %Y')`"
+date: "`r format(as.Date('2021-05-24'), '%d %b, %Y')`"
 bibliography: "../docs/ecgref.bib"
 biblio-style: "apalike"
 link-citations: yes
-# nocite: "sta5031"
 output:
   bookdown::beamer_presentation2:
     toc: yes
@@ -158,7 +157,7 @@ Caffeine intake depends on the following two factors [@naver2018].
 
 :::: column
 
-```{r espresso, echo=FALSE}
+```{r espresso, echo=FALSE, fig.cap="Coffee (40 ml)"}
 knitr::include_graphics("../docs/images/espresso.png")
 ```
 
@@ -286,6 +285,28 @@ latin %>%
     - [Nike sport band](https://www.apple.com/shop/product/MX8C2AM/A/40mm-anthracite-black-nike-sport-band-regular?fnode=5e9ad1340eb02decfee1689be9360555f2f276ad270a672413266cfba01ad7b0e20a1c634dbd66eaec20c01170cf533573070d71c910b376e339037f157174b7e6f45e144d64e052e5274d1069eb67b4)
     - of same fit (8-th)
 - and other instructions in [https://support.apple.com/en-us/HT208955](https://support.apple.com/en-us/HT208955)
+
+## Experiment
+
+::: columns
+
+:::: column
+
+```{r takecoffee, echo=FALSE, fig.cap="Taking Coffee"}
+knitr::include_graphics("../docs/images/taking-coffee.png")
+```
+
+::::
+
+:::: column
+
+```{r measuringecg, echo=FALSE, fig.cap="Measuring ECG"}
+knitr::include_graphics("../docs/images/measure-ecg.png")
+```
+
+::::
+
+:::
 
 <!-- analysis -->
 
@@ -555,25 +576,31 @@ tibble(f_stat = f_tre) %>%
 
 Why this result?
 
-- I have taken coffee everyday
-- so a cup of coffee might not affect me individually
-- **Outliers**: Unit `8` seems outliers (Table \@ref(tab:diffdata))
+- Caffeine **tolerance**
+    - I have taken coffee everyday
+    - Was coffee I have taken too small?
+- **Outliers**
+    - Unit `8` seems outliers
+    - Table \@ref(tab:diffdata): value of `14`
 
 ## Future study
 
 - Other samples
-- Re-measure
+    - Re-define the levels of each factor
+- Re-measure (for Unit `8`)
 
 
 <!-- references -->
 
 # Related Contents
 
-## Project Repo {-}
+## Codes
 
-My Github project for this experiment:
+- My Github repository: `ecg-experiment`
+    - [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment)
+    - includes source codes for this analysis
+    - and R markdown files
 
-[https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment)
 
 <div id="refs"></div>
 
