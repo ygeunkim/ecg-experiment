@@ -9,7 +9,7 @@ Experiments**](https://www.kwonsanglee.com) ([Lee 2021](#ref-sta5031)).
 -   Conduct a real randomized experiment, collect data, and analyze
     them.
 -   Present a non-statistical paper using an (quasi-)experiment in the
-    field outside statistics and critize them.
+    field outside statistics and criticize them.
 -   Bring my own research that is related to an (quasi-)experiment.
 
 I chose real experimental design, the first one. The followings are my
@@ -17,7 +17,7 @@ works:
 
 1.  [Project
     presentation](https://github.com/ygeunkim/ecg-experiment/blob/master/static/slides/youngslide.pdf)
-2.  Reprot (Still working)
+2.  Report (Still working)
 
 ## Goal of the Experiment
 
@@ -190,6 +190,28 @@ sample(LETTERS[1:4])
 -   Nespresso machine: [Pixie
     C61](https://www.nespresso.com/kr/en/order/machines/original/pixie-electric-red-coffee-machine)
     in my home
+
+## Brief Result
+
+### Data set
+
+    #>    row col1 col2 col3  col4 Mean
+    #> 1 row1 9.00  1.0 7.00  3.00 5.00
+    #> 2 row2 2.00  6.0 3.00 14.00 6.25
+    #> 3 row3 4.00  3.0 1.00  0.00 2.00
+    #> 4 row4 2.00  4.0 2.00  4.00 3.00
+    #> 5 Mean 4.25  3.5 3.25  5.25 4.06
+
+### ANOVA
+
+    #>             Df Sum Sq Mean Sq F value Pr(>F)
+    #> water        3   44.2   14.73    1.63   0.28
+    #> speed        3    9.7    3.23    0.36   0.79
+    #> coffee       3   78.7   26.23    2.89   0.12
+    #> Residuals    6   54.4    9.06
+
+Read the slide and the report for the next results based on
+*F*<sub>*T**r**e*</sub> = 2.894😄!
 
 ------------------------------------------------------------------------
 

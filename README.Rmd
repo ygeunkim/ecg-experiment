@@ -17,6 +17,24 @@ knitr::opts_chunk$set(
   fig.asp = .618
   )
 options(digits = 3)
+options(knitr.kable.NA = "")
+options(kableExtra.latex.load_packages = FALSE)
+is_html <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "html"
+is_latex <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "latex"
+kable_format <- ifelse(!is_html, "latex", "html")
+kable_format <- ifelse(length(kable_format) == 0, "html", kable_format) # for excecutable
+```
+
+```{r pkgs, message=FALSE, echo=FALSE}
+# tidyverse family---------------------
+library(tidyverse)
+# kable--------------------------------
+library(knitr)
+library(kableExtra)
+# functions----------------------------
+source("r/lsd-anova.R")
+# set seed for report -----------------
+set.seed(1)
 ```
 
 # Electrocardiogram Experiment
@@ -26,13 +44,13 @@ options(digits = 3)
 This is a project performed in [SKKU **Design and Analysis of Experiments**](https://www.kwonsanglee.com) [@sta5031].
 
 - Conduct a real randomized experiment, collect data, and analyze them.
-- Present a non-statistical paper using an (quasi-)experiment in the field outside statistics and critize them.
+- Present a non-statistical paper using an (quasi-)experiment in the field outside statistics and criticize them.
 - Bring my own research that is related to an (quasi-)experiment.
 
 I chose real experimental design, the first one. The followings are my works:
 
 1. [Project presentation](https://github.com/ygeunkim/ecg-experiment/blob/master/static/slides/youngslide.pdf)
-2. Reprot (Still working)
+2. Report (Still working)
 
 ## Goal of the Experiment
 
@@ -133,5 +151,32 @@ sample(LETTERS[1:4])
     - rest arms on a my desk
 - Use same strip for apple watch: [Nike sport band](https://www.apple.com/shop/product/MX8C2AM/A/40mm-anthracite-black-nike-sport-band-regular?fnode=5e9ad1340eb02decfee1689be9360555f2f276ad270a672413266cfba01ad7b0e20a1c634dbd66eaec20c01170cf533573070d71c910b376e339037f157174b7e6f45e144d64e052e5274d1069eb67b4) of same fit
 - Nespresso machine: [Pixie C61](https://www.nespresso.com/kr/en/order/machines/original/pixie-electric-red-coffee-machine) in my home
+
+## Brief Result
+
+### Data set
+
+```{r, message=FALSE, echo=FALSE}
+ecg_diff <- read_csv("data/processed/ecg-diff.csv")
+ecg_diff %>% 
+  select(-id, -date, -coffee) %>% 
+  gen_table(row = water, col = speed, out = diff, add_mean = TRUE)
+```
+
+### ANOVA
+
+```{r, include=FALSE}
+ecg_anova <- aov_lsd(
+  diff ~ water + speed + coffee, 
+  data = ecg_diff
+)
+ecg_aov <- broom::tidy(ecg_anova)
+```
+
+```{r ecganova, echo=FALSE}
+summary(ecg_anova)
+```
+
+Read the slide and the report for the next results based on $F_{Tre} = `r ecg_aov$statistic[3]`$`r emo::ji("smile")`!
 
 ---
