@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
   fig.width = 6,
   fig.pos = "H",
   fig.asp = .618
-  )
+)
 knitr::knit_hooks$set(
   document = function(x) {
     sub("\\usepackage[]{color}", "\\usepackage{xcolor}", x, fixed = TRUE)
@@ -70,7 +70,6 @@ set.seed(1)
 source("lsd-anova.R")
 source("lsd-rand.R")
 ```
-
 
 # Introduction
 
@@ -487,52 +486,7 @@ ecg_sharp %>%
 
 ## Randomization Test
 
-<!-- ```{r, echo=FALSE} -->
-<!-- # observed------------------ -->
-<!-- y_obs <- ecg_diff$diff -->
-<!-- row_obs <- ecg_sharp$water -->
-<!-- col_obs <- ecg_sharp$speed -->
-<!-- ecg_size <- nrow(ecg_sharp) -->
-<!-- trt_obs <- ecg_sharp$coffee -->
-<!-- # possible reduced squares---- -->
-<!-- trt1 <- c(c(LETTERS[1:4], c("B", "C", "D", "A"), c("C", "D", "A", "B"), c("D", "A", "B", "A"))) -->
-<!-- trt2 <- c(c(LETTERS[1:4], c("B", "D", "A", "C"), c("C", "A", "D", "B"), c("D", "C", "B", "A"))) -->
-<!-- trt3 <- c(c(LETTERS[1:4], c("B", "A", "D", "C"), c("C", "D", "A", "B"), c("D", "C", "B", "A"))) -->
-<!-- trt4 <- c(c(LETTERS[1:4], c("B", "A", "D", "C"), c("C", "D", "B", "A"), c("D", "C", "A", "B"))) -->
-<!-- # permutation---------------------- -->
-<!-- doMC::registerDoMC(cores = 8) -->
-<!-- f_tre <- foreach(b = seq_len(1000), .combine = rbind) %dopar% { -->
-<!--   latin_form <- sample(1:4, 1) -->
-<!--   rand_trt <- sample(LETTERS[1:4], 4) %>% order() -->
-<!--   ecg_new <- tibble( -->
-<!--     row = row_obs, -->
-<!--     col = col_obs, -->
-<!--     trt = case_when( -->
-<!--       latin_form == 1 ~ trt1, -->
-<!--       latin_form == 2 ~ trt2, -->
-<!--       latin_form == 3 ~ trt3, -->
-<!--       latin_form == 4 ~ trt4 -->
-<!--     ), -->
-<!--     out = y_obs -->
-<!--   ) %>%  -->
-<!--     mutate( -->
-<!--       trt = case_when( -->
-<!--         trt == "A" ~ rand_trt[1], -->
-<!--         trt == "B" ~ rand_trt[2], -->
-<!--         trt == "C" ~ rand_trt[3], -->
-<!--         trt == "D" ~ rand_trt[4] -->
-<!--       ) -->
-<!--     ) -->
-<!--   aov_lsd(out ~ row + col + trt, data = ecg_new) %>%  -->
-<!--     broom::tidy() %>%  -->
-<!--     .$statistic -->
-<!-- } -->
-<!-- # p-value---------------------------- -->
-<!-- p_val <- sum(f_tre[,3] >= ecg_aov$statistic[3]) / 1000 -->
-<!-- ``` -->
-
-
-```{r, echo=FALSE, cache=TRUE}
+```{r sharptest, echo=FALSE, cache=TRUE}
 num_iter <- 2000
 f_tre <- test_sharp(ecg_sharp, ecg_diff$diff, num_iter, 4, c("water", "speed", "coffee"), 8)
 p_val <- sum(f_tre >= ecg_aov$statistic[3]) / num_iter
@@ -563,6 +517,8 @@ tibble(f_stat = f_tre) %>%
 ```
 
 
+<!-- Conclusion -->
+
 # Conclusion
 
 ## Conclusion
@@ -581,13 +537,47 @@ Why this result?
     - Was coffee I have taken too small?
 - **Outliers**
     - Unit `8` seems outliers
-    - Table \@ref(tab:diffdata): value of `14`
+    - Table \@ref(tab:diffdata): value of `r ecg_diff$diff[8]`
 
 ## Future study
+
+```{r toytest, include=FALSE, cache=TRUE}
+# Toy------------------------------------
+new_val <- 7
+ecg_hb <- 
+  ecg_diff %>% 
+  mutate(diff = replace(diff, water == 2 & speed == 4 & coffee == 1, new_val))
+sharp_hb <- 
+  ecg_sharp %>% 
+  mutate_at(vars(HB, W, S, De), ~replace(., water == 2 & speed == 4 & coffee == 1, new_val))
+# anova with changed value----------------
+hb_anova <- aov_lsd(
+  diff ~ water + speed + coffee,
+  data = ecg_hb
+)
+hb_aov <- broom::tidy(hb_anova)
+# randomization with changed value--------
+hb_tre <- test_sharp(sharp_hb, ecg_hb$diff, num_iter, 4, c("water", "speed", "coffee"), 8)
+hb_pval <- sum(hb_tre >= hb_aov$statistic[3]) / num_iter
+```
 
 - Other samples
     - Re-define the levels of each factor
 - Re-measure (for Unit `8`)
+    - Figure \@ref(fig:hbrand): Change the value of Unit `8` to `r new_val`
+    - P-value becomes `r hb_pval`
+
+```{r hbrand, echo=FALSE, fig.cap="Changing the Outlier"}
+tibble(f_stat = hb_tre) %>% 
+  ggplot(aes(x = f_stat)) +
+  geom_histogram(binwidth = .1) +
+  geom_vline(xintercept = hb_aov$statistic[3], col = I("red")) +
+  theme_minimal() +
+  labs(
+    x = element_blank(),
+    y = "Frequency"
+  )
+```
 
 
 <!-- references -->
