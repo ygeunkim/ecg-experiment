@@ -1,5 +1,5 @@
 ---
-title: "Electrocardiogram Experiment"
+title: "Coffee-Electrocardiogram Experiment"
 subtitle: "using latin square design"
 author: |
   | Young Geun Kim
@@ -98,7 +98,7 @@ knitr::include_graphics("../docs/images/ecg-support.jpg")
 
 ## Latin Square Design
 
-```{r, include=FALSE}
+```{r designform, include=FALSE}
 latin <- 
   tibble(
     row = rep(1:4, each = 4),
@@ -209,7 +209,7 @@ knitr::include_graphics("../docs/images/ecg-support-watch.jpg")
 1. Randomly allocate (`1`, `2`, `3`, `4`) to previous (`A`, `B`, `C`, `D`)
 2. Assign to above Table \@ref(tab:latindesign)
 
-```{r}
+```{r allocation, cache=TRUE}
 set.seed(1)
 sample(LETTERS[1:4])
 ```
@@ -313,7 +313,7 @@ knitr::include_graphics("../docs/images/measure-ecg.png")
 
 ## Dataset
 
-```{r, message=FALSE, echo=FALSE}
+```{r read, message=FALSE, echo=FALSE}
 ecg <- read_csv("../data/raw/ecg.csv")
 ecg_diff <- read_csv("../data/processed/ecg-diff.csv")
 ```
@@ -387,7 +387,7 @@ ecg_diff %>%
 
 ## ANOVA
 
-```{r, include=FALSE}
+```{r doanova, include=FALSE}
 ecg_anova <- aov_lsd(
   diff ~ water + speed + coffee, 
   data = ecg_diff
