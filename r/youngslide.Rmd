@@ -17,6 +17,7 @@ output:
     colortheme: "beaver"
     fonttheme: "professionalfonts"
     citation_package: natbib
+    latex_engine: lualatex
     includes:
       in_header: "../docs/preamble.tex"
 knit:
@@ -285,27 +286,6 @@ latin %>%
     - of same fit (8-th)
 - and other instructions in [https://support.apple.com/en-us/HT208955](https://support.apple.com/en-us/HT208955)
 
-## Experiment
-
-::: columns
-
-:::: column
-
-```{r takecoffee, echo=FALSE, fig.cap="Taking Coffee"}
-knitr::include_graphics("../docs/images/taking-coffee.png")
-```
-
-::::
-
-:::: column
-
-```{r measuringecg, echo=FALSE, fig.cap="Measuring ECG"}
-knitr::include_graphics("../docs/images/measure-ecg.png")
-```
-
-::::
-
-:::
 
 <!-- analysis -->
 
@@ -380,7 +360,7 @@ ecg_diff %>%
   )
 ```
 
-- Each cell: $y_{ij}$
+- Each cell: $y_{rc}$
 - Column: $\yrbar$
 - Row: $\ycbar$
 - Grand mean: $\ybar$
@@ -402,8 +382,8 @@ print_anova(ecg_aov, format = kable_format, caption = "ANOVA Table") %>%
 
 - ANOVA table from the observed data
 - $F_{Tre} = `r ecg_aov$statistic[3]`$: has causal meaning
+- Here p-value is `r ecg_aov$p.value[3]`
 - Randomize $F_{Tre}$ under sharp null
-
 
 ## Sharp Null
 
@@ -419,7 +399,7 @@ print_anova(ecg_aov, format = kable_format, caption = "ANOVA Table") %>%
 ### Imputing
 
 1. Under the sharp null, impute the missing $Y_{rc}(k)$
-2. Apply the formulation (SSRow, SSCol, SSTre, SSRes, SSTot) to the units
+2. Apply the formulation
 
 ::::
 
@@ -452,7 +432,6 @@ ecg_po %>%
 ::::
 
 :::
-
 
 ## Imputation of Observed Potential Outcomes
 
@@ -488,7 +467,7 @@ ecg_sharp %>%
 
 ```{r sharptest, echo=FALSE, cache=TRUE}
 num_iter <- 2000
-f_tre <- test_sharp(ecg_sharp, ecg_diff$diff, num_iter, 4, c("water", "speed", "coffee"), 8)
+f_tre <- test_sharp(ecg_sharp, ecg_diff$diff, num_iter, 4, c("water", "speed", "coffee"), 8, 1)
 p_val <- sum(f_tre >= ecg_aov$statistic[3]) / num_iter
 ```
 
@@ -526,7 +505,7 @@ tibble(f_stat = f_tre) %>%
 - Recall: $H_0: y_{rc}(1) = y_{rc}(2) = y_{rc}(3) = y_{rc}(4)$
 - i.e. Caffeine's effect on average heart rate
 - We expected the effect was significant
-- However, there was *no significant evidence* (p-value of `r p_val`)
+- However, there was *no significant evidence* (p-value of `r p_val`) \emoji{sob}
 
 ## Discussion
 
@@ -543,7 +522,7 @@ Why this result?
 
 ```{r toytest, include=FALSE, cache=TRUE}
 # Toy------------------------------------
-new_val <- 7
+new_val <- 10
 ecg_hb <- 
   ecg_diff %>% 
   mutate(diff = replace(diff, water == 2 & speed == 4 & coffee == 1, new_val))
@@ -557,17 +536,17 @@ hb_anova <- aov_lsd(
 )
 hb_aov <- broom::tidy(hb_anova)
 # randomization with changed value--------
-hb_tre <- test_sharp(sharp_hb, ecg_hb$diff, num_iter, 4, c("water", "speed", "coffee"), 8)
+hb_tre <- test_sharp(sharp_hb, ecg_hb$diff, num_iter, 4, c("water", "speed", "coffee"), 8, 1)
 hb_pval <- sum(hb_tre >= hb_aov$statistic[3]) / num_iter
 ```
 
 - Other samples
     - Re-define the levels of each factor
 - Re-measure (for Unit `8`)
-    - Figure \@ref(fig:hbrand): Change the value of Unit `8` to `r new_val`
-    - P-value becomes `r hb_pval`
+    - Figure \@ref(fig:hbrand): Change $y_{24} = `r ecg_diff$diff[8]`$ to `r new_val`
+    - P-value becomes `r hb_pval` \emoji{partying-face}
 
-```{r hbrand, echo=FALSE, fig.cap="Changing the Outlier"}
+```{r hbrand, echo=FALSE, fig.cap="If (2,4) were the different value\\emoji{thinking}"}
 tibble(f_stat = hb_tre) %>% 
   ggplot(aes(x = f_stat)) +
   geom_histogram(binwidth = .1) +
@@ -584,13 +563,16 @@ tibble(f_stat = hb_tre) %>%
 
 # Related Contents
 
-## Codes
+## \emoji{waving-hand-medium-light-skin-tone}
+
+### \emoji{hand-with-fingers-splayed-medium-light-skin-tone}
+
+Q & A
+
+### Codes
 
 - My Github repository: `ecg-experiment`
     - [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment)
     - includes source codes for this analysis
     - and R markdown files
-
-
-<div id="refs"></div>
 
