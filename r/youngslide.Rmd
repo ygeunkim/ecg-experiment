@@ -81,7 +81,7 @@ source("lsd-rand.R")
 :::: column
 ### Goal
 
-- \textcolor{red}{Does caffeine affect ECG or \it{heart rate}?}
+- \textcolor{red}{Does caffeine causally affect ECG or \it{heart rate}?}
 - Caffeine: \emoji{coffee} *coffee*
 - Output: \emoji{watch} Average heart rate (BPM)
 
@@ -364,19 +364,31 @@ ecg_diff %>%
 - Column: $\yrbar$
 - Row: $\ycbar$
 - Grand mean: $\ybar$
+- $SSTot = \sum (y_{rc} - \ybar(\cdot))^2 = `r sum((ecg_diff$diff - mean(ecg_diff$diff))^2)`$
+
+## Unbiased Estimators
+
+Recall
+
+- Adjusted row effect: $\rho_r = \Yrbar(\cdot) - \Ybar(\cdot)$
+    - unbiased: $\hat\rho_r = \yrbar(\cdot) - \ybar(\cdot)$
+- Adjusted column effect: $\gamma_c = \Ycbar(\cdot) - \Ybar(\cdot)$
+    - unbiased: $\hat\gamma_c = \ycbar(\cdot) - \ybar(\cdot)$
+- Adjusted treatment effect ()
+    - \textcolor{blue}{causal estimand}
+    - $\tau(k) = \Ybar(k) - \Ybar(\cdot)$
+    - unbiased: $\hat\tau(k) = \ybar(k) - \ybar(\cdot)$
 
 ## Causal Estimand
 
-From previous Table \@ref(tab:obsouttab),
-
-$$\hat\tau(k) = \ybar(k) - \ybar(\cdot)$$
-
-is the unbiased estimator of $\tau(k) = \overline{Y}_{\cdot \cdot}(k) - \overline{Y}_{\cdot \cdot}(\cdot)$.
-
-```{r, echo=FALSE}
-ecg_diff %>% 
+```{r tautab, echo=FALSE}
+# tauhat--------------------------
+ecg_tau <- 
+  ecg_diff %>% 
   group_by(coffee) %>% 
-  summarise(tauhat = mean(diff) - mean(.$diff)) %>% 
+  summarise(tauhat = mean(diff) - mean(.$diff))
+# print----------------------------
+ecg_tau %>% 
   mutate(
     coffee = case_when(
       coffee == 1 ~ "HB",
@@ -394,7 +406,7 @@ ecg_diff %>%
   kable(
     format = kable_format,
     escape = FALSE,
-    caption = "Unbiased Estimation: $\\hat\\tau(k)$",
+    caption = "Unbiased Estimatior of adjusted treatment effect",
     col.names = c("House Blend", "Sumatra", "Decaf", "Water")
   ) %>% 
   kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
@@ -402,6 +414,77 @@ ecg_diff %>%
     "Caffeine: HB > S > D > W"
   )
 ```
+
+- Larger caffeine leads to larger effect
+- $SSTre = 4 \sum \hat\tau(k)^2 = `r sum(ecg_tau$tauhat^2) * 4`$
+
+## Row and Column Effects
+
+```{r rhotab, echo=FALSE}
+# rhohat---------------------------------
+ecg_rho <- 
+  ecg_diff %>% 
+  group_by(water) %>% 
+  summarise(rhohat = mean(diff) - mean(.$diff))
+# print----------------------------------
+ecg_rho %>% 
+  mutate(
+    water = case_when(
+      water == 1 ~ "100ml",
+      water == 2 ~ "200ml",
+      water == 3 ~ "300ml",
+      water == 4 ~ "400ml"
+    ),
+    rhohat = cell_spec(
+      rhohat, 
+      color = spec_color(rhohat, end = .8, direction = -1),
+      font_size = spec_font_size(rhohat, begin = 12)
+    )
+  ) %>% 
+  pivot_wider(names_from = "water", values_from = "rhohat") %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Unbiased Estimatior of adjusted row effect"
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position"))
+```
+
+- Different with what we expected: non-monotonous
+- $SSRow = 4 \sum \hat\rho_r^2 = `r sum(ecg_rho$rhohat^2) * 4`$
+
+```{r gamtab, echo=FALSE}
+# gamhat--------------------------------
+ecg_gam <- 
+  ecg_diff %>% 
+  group_by(speed) %>% 
+  summarise(gamhat = mean(diff) - mean(.$diff))
+# print---------------------------------
+ecg_gam %>% 
+  mutate(
+    speed = case_when(
+      speed == 1 ~ "<=5",
+      speed == 2 ~ "5-15",
+      speed == 3 ~ "15-30",
+      speed == 4 ~ "30<"
+    ),
+    gamhat = cell_spec(
+      gamhat, 
+      color = spec_color(gamhat, end = .8, direction = -1),
+      font_size = spec_font_size(gamhat, begin = 12)
+    )
+  ) %>% 
+  pivot_wider(names_from = "speed", values_from = "gamhat") %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Unbiased Estimatior of adjusted column effect"
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position"))
+```
+
+- Monotonous, but reverse direction to our original idea
+- $SSCol = 4 \sum \hat\gamma_c^2 = `r sum(ecg_gam$gamhat^2) * 4`$
 
 ## ANOVA
 
@@ -419,8 +502,8 @@ print_anova(ecg_aov, format = kable_format, caption = "ANOVA Table") %>%
 ```
 
 - ANOVA table from the observed data
-- $F_{Tre} = `r ecg_aov$statistic[3]`$: has causal meaning
-- Here p-value is `r ecg_aov$p.value[3]`
+- p-value for the treatment: `r ecg_aov$p.value[3]` (not significant)
+- $F_{Tre} = `r ecg_aov$statistic[3]`$ has causal meaning
 - Randomize $F_{Tre}$ under sharp null
 
 ## Sharp Null
@@ -512,9 +595,9 @@ p_val <- sum(f_tre >= ecg_aov$statistic[3]) / num_iter
 - Iterating `r num_iter` times
 - p-value is:
 
-$$pvalue = `r p_val`$$
+$$\text{p-value} = `r p_val`$$
 
-i.e. Not significant as in ANOVA table (p-value of $`r ecg_aov$p.value[3]`$)
+i.e. Not significant as in ANOVA table
 
 ## Randomization Distribution
 
