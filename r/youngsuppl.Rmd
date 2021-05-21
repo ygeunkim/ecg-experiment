@@ -1,0 +1,258 @@
+---
+title: "Supplementary Materials"
+subtitle: "Datasets"
+author: |
+  | Young Geun Kim
+  | [ygeunkim.github.io](https://ygeunkim.github.io)
+date: "`r format(Sys.time(), '%d %b, %Y')`"
+bibliography: "../docs/ecgref.bib"
+biblio-style: "apalike"
+link-citations: yes
+output: 
+  bookdown::pdf_document2:
+    toc: yes
+    latex_engine: lualatex
+    includes:
+      in_header: "../docs/preamble.tex"
+knit:
+  (function(inputFile, encoding) {
+    rmarkdown::render(input = inputFile, encoding = encoding, output_dir = "../static/appendix")
+  })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  out.width = "70%",
+  fig.align = "center",
+  fig.width = 6,
+  fig.pos = "H",
+  fig.asp = .618
+  )
+knitr::knit_hooks$set(
+  document = function(x) {
+    sub("\\usepackage[]{color}", "\\usepackage{xcolor}", x, fixed = TRUE)
+  }
+)
+options(digits = 3)
+options(knitr.kable.NA = "")
+options(kableExtra.latex.load_packages = FALSE)
+is_html <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "html"
+is_latex <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "latex"
+kable_format <- ifelse(!is_html, "latex", "html")
+kable_format <- ifelse(length(kable_format) == 0, "html", kable_format) # for excecutable
+```
+
+```{r pkgs, message=FALSE, echo=FALSE}
+# tidyverse family---------------------
+library(tidyverse)
+# kable--------------------------------
+library(knitr)
+library(kableExtra)
+```
+
+# Data
+
+We provide experiment data here.
+In the slide, some part of the tables were skipped due to its size.
+
+## Experiment Data
+
+```{r readdata, message=FALSE, echo=FALSE}
+# Import---------------------------------
+ecg <- read_csv("../data/raw/ecg.csv")
+ecg_diff <- read_csv("../data/processed/ecg-diff.csv")
+```
+
+The following is the raw dataset:
+
+```{r}
+ecg
+```
+
+Table \@ref(tab:diffdata) is LSD format based on $y_{rc} \defn y_{rc}^{post} - y_{rc}^{pre}$.
+
+```{r diffdata, echo=FALSE}
+# Print----------------------------------
+ecg_diff %>% 
+  select(-id, -date) %>% 
+  mutate(
+    water = case_when(
+      water == 1 ~ "0 ml",
+      water == 2 ~ "100 ml",
+      water == 3 ~ "200 ml",
+      water == 4 ~ "300 ml"
+    ),
+    speed = case_when(
+      speed == 1 ~ "<=5",
+      speed == 2 ~ "5-15",
+      speed == 3 ~ "15-30",
+      speed == 4 ~ "30<"
+    ),
+    coffee = case_when(
+      coffee == 1 ~ "HB",
+      coffee == 2 ~ "S",
+      coffee == 3 ~ "D",
+      coffee == 4 ~ "W"
+    )
+  ) %>% 
+  mutate(
+    diff = cell_spec(
+      diff, 
+      color = spec_color(diff, end = .9, direction = -1),
+      font_size = spec_font_size(diff, begin = 8)
+    )
+  ) %>% 
+  unite(coffee, diff, col = "output", sep = ", ") %>% 
+  group_by(water) %>% 
+  pivot_wider(names_from = speed, values_from = output) %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Experiment Data"
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
+  add_header_above(
+    header = c(" " = 1, "Drinking Speed" = 4),
+    escape = FALSE
+  ) %>% 
+  footnote(
+    number = c(
+      "Caffeine: HB > S > D > W",
+      "Numbers indicate the difference after and before taking coffee"
+    )
+  )
+```
+
+## Science Table
+
+To test sharp null of no effect
+
+\begin{equation}
+  H_0: y_{rc}(1) = y_{rc}(2) = y_{rc}(3) = y_{rc}(4)
+  (\#eq:sharpnoeff)
+\end{equation}
+
+we build the science table in Table \@ref(tab:posharp).
+
+```{r posharp, message=FALSE, echo=FALSE}
+# science table-----------------------------------------------------------
+ecg_po <- read_csv("../data/processed/science.csv")
+ecg_po %>% 
+  # slice(1:4, 13:16) %>%
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Observed Values of the Science Table"
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
+  add_header_above(
+    header = c(" " = 4, "Observed $y_{rc}(k)$" = 4),
+    escape = FALSE
+  ) %>% 
+  pack_rows(
+    "Row 1 (Water 0 ml)",
+    1, 4
+  ) %>% 
+  pack_rows(
+    "Row 2 (Water 100 ml)",
+    5, 8
+  ) %>% 
+  pack_rows(
+    "Row 3 (Water 200 ml)",
+    9, 12
+  ) %>% 
+  pack_rows(
+    "Row 4 (Water 300 ml)",
+    13, 16
+  )
+```
+
+Now we impute impute the missing $Y_{rc}(k)$ under the sharp null. See Table \@ref(tab:tablesharp).
+
+```{r tablesharp, message=FALSE, echo=FALSE}
+# imputing-------------------------------------------------------------------
+ecg_sharp <- read_csv("../data/processed/science-sharp.csv")
+ecg_sharp %>% 
+  # slice(1:4, 13:16) %>%
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Imputed Outcomes under the Sharp Null",
+    longtable = TRUE
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
+  add_header_above(
+    header = c(" " = 4, "Observed $y_{rc}(k)$" = 4),
+    escape = FALSE
+  ) %>% 
+  pack_rows(
+    "Row 1 (Water 0 ml)",
+    1, 4
+  ) %>% 
+  pack_rows(
+    "Row 2 (Water 100 ml)",
+    5, 8
+  ) %>% 
+  pack_rows(
+    "Row 3 (Water 200 ml)",
+    9, 12
+  ) %>% 
+  pack_rows(
+    "Row 4 (Water 300 ml)",
+    13, 16
+  )
+```
+
+\newpage
+
+# ECG Results
+
+From ECG app, we get the graph as in Figure \@ref(fig:resplot).
+
+```{r, include=FALSE}
+fig_subcap <- c(
+  "(1,1),House blend", "(1,2),Water", "(1,3),Sumatra", "(1,4),Decaf",
+  "(2,1),Water", "(2,2),Sumatra", "(2,3),Decaf", "(2,4),House blend",
+  "(3,1),Sumatra", "(3,2),Decaf", "(3,3),House blend", "(3,4),Water",
+  "(4,1),Decaf", "(4,2),House blend", "(4,3),Water", "(4,4),Sumatra"
+)
+fig_subcap <- str_c(fig_subcap, str_c(ecg$post, " BPM"), sep = ": ")
+```
+
+```{r resplot, echo=FALSE, fig.cap="Electrocardiogram after drinking Coffee", fig.subcap = fig_subcap, fig.asp=1, fig.ncol = 4, out.width="25%"}
+# (1, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-22.pdf")
+# (1, 2)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-23.pdf")
+# (1, 3)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-24.pdf")
+# (1, 4)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-25.pdf")
+# (2, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-26.pdf")
+# (2, 2)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-27.pdf")
+# (2, 3)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-28.pdf")
+# (2, 3)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-29.pdf")
+# (3, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-04-30.pdf")
+# (3, 2)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-01.pdf")
+# (3, 3)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-02.pdf")
+# (3, 4)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-03.pdf")
+# (4, 1)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-04.pdf")
+# (4, 2)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-05.pdf")
+# (4, 3)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-06.pdf")
+# (4, 4)----------------------------------------------------
+knitr::include_graphics("../docs/images/ecg-2021-05-07.pdf")
+```
+
