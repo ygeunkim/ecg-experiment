@@ -81,9 +81,9 @@ source("lsd-rand.R")
 :::: column
 ### Goal
 
-- Does caffeine affect ECG or *heart rate*?
-- Caffeine: *coffee*
-- Output: Average heart rate (BPM)
+- \textcolor{red}{Does caffeine affect ECG or \it{heart rate}?}
+- Caffeine: \emoji{coffee} *coffee*
+- Output: \emoji{watch} Average heart rate (BPM)
 
 ::::
 
@@ -182,8 +182,8 @@ Intake of caffeine [@reddit2020] from [Starbucks by Nespresso](https://athome.st
 ### Value: Average heart rate
 
 - in BPM
-- Notations from the course [@sta5031]
-- Since there exists variation, we consider difference of BPM after and before: $y_{rc}^{post} - y_{rc}^{pre}$
+- $y_{rc}^{pre}$, $y_{rc}^{post}$: before and after coffee as in @sta5031
+- Since there exists variation, we consider the difference: $y_{rc} \defn y_{rc}^{post} - y_{rc}^{pre}$
 
 ### Measure
 
@@ -215,11 +215,11 @@ set.seed(1)
 sample(LETTERS[1:4])
 ```
 
-\begin{enumerate}[(A)]
-  \item House blend (74.5 mg)
-  \item Water (0 mg)
-  \item Sumatra (54.5 mg)
-  \item Decaf espresso roast (3 mg)
+\begin{enumerate}[A]
+  \item House blend (74.5 mg) to `1`
+  \item Water (0 mg) to `4`
+  \item Sumatra (54.5 mg) to `2`
+  \item Decaf espresso roast (3 mg) to `3`
 \end{enumerate}
 
 ## Latin Square
@@ -344,7 +344,7 @@ ecg_diff %>%
   footnote(
     number = c(
       "Caffeine: HB > S > D > W",
-      "Numbers indicate the difference after and before taking coffee"
+      "Outputs: after - before taking coffee"
     )
   )
 ```
@@ -364,6 +364,44 @@ ecg_diff %>%
 - Column: $\yrbar$
 - Row: $\ycbar$
 - Grand mean: $\ybar$
+
+## Causal Estimand
+
+From previous Table \@ref(tab:obsouttab),
+
+$$\hat\tau(k) = \ybar(k) - \ybar(\cdot)$$
+
+is the unbiased estimator of $\tau(k) = \overline{Y}_{\cdot \cdot}(k) - \overline{Y}_{\cdot \cdot}(\cdot)$.
+
+```{r, echo=FALSE}
+ecg_diff %>% 
+  group_by(coffee) %>% 
+  summarise(tauhat = mean(diff) - mean(.$diff)) %>% 
+  mutate(
+    coffee = case_when(
+      coffee == 1 ~ "HB",
+      coffee == 4 ~ "W",
+      coffee == 2 ~ "S",
+      coffee == 3 ~ "D"
+    ),
+    tauhat = cell_spec(
+      tauhat, 
+      color = spec_color(tauhat, end = .8, direction = -1),
+      font_size = spec_font_size(tauhat, begin = 12)
+    )
+  ) %>% 
+  pivot_wider(names_from = "coffee", values_from = "tauhat") %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Unbiased Estimation: $\\hat\\tau(k)$",
+    col.names = c("House Blend", "Sumatra", "Decaf", "Water")
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
+  footnote(
+    "Caffeine: HB > S > D > W"
+  )
+```
 
 ## ANOVA
 
@@ -412,7 +450,7 @@ ecg_po %>%
   kable(
     format = kable_format,
     escape = FALSE,
-    caption = "Observed Values of the Science Table for the Coffee-ECG Experiment (row 2 and 3 omitted)"
+    caption = "Observed Values of the Science Table for the Coffee-ECG Experiment (row 2 and 3: in Appendix)"
   ) %>% 
   kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position", "scale_down")) %>% 
   add_header_above(
@@ -461,7 +499,6 @@ ecg_sharp %>%
     5, 8
   )
 ```
-
 
 ## Randomization Test
 
@@ -540,13 +577,13 @@ hb_tre <- test_sharp(sharp_hb, ecg_hb$diff, num_iter, 4, c("water", "speed", "co
 hb_pval <- sum(hb_tre >= hb_aov$statistic[3]) / num_iter
 ```
 
-- Other samples
+- Other samples: Fix arbitrary levels
     - Re-define the levels of each factor
 - Re-measure (for Unit `8`)
     - Figure \@ref(fig:hbrand): Change $y_{24} = `r ecg_diff$diff[8]`$ to `r new_val`
     - P-value becomes `r hb_pval` \emoji{partying-face}
 
-```{r hbrand, echo=FALSE, fig.cap="If (2,4) were the different value\\emoji{thinking}"}
+```{r hbrand, echo=FALSE, fig.cap="If (2,4) were the different value \\emoji{thinking}"}
 tibble(f_stat = hb_tre) %>% 
   ggplot(aes(x = f_stat)) +
   geom_histogram(binwidth = .1) +
@@ -563,16 +600,17 @@ tibble(f_stat = hb_tre) %>%
 
 # Related Contents
 
-## \emoji{waving-hand-medium-light-skin-tone}
+## Thanks \emoji{waving-hand-medium-light-skin-tone}
 
-### \emoji{hand-with-fingers-splayed-medium-light-skin-tone}
+### Feedback \emoji{hand-with-fingers-splayed-medium-light-skin-tone}
 
-Q & A
+- Thanks for listening \emoji{bar-chart}
+- Q & A \emoji{light-bulb}
 
-### Codes
+### Codes \emoji{laptop}
 
 - My Github repository: `ecg-experiment`
-    - [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment)
-    - includes source codes for this analysis
-    - and R markdown files
+    - [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment) \emoji{linked-paperclips}
+    - includes source codes for this analysis \emoji{toolbox}
+    - and R markdown files \emoji{page-with-curl}
 
