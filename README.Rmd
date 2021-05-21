@@ -50,7 +50,7 @@ This is a project performed in [SKKU **Design and Analysis of Experiments**](htt
 I chose real experimental design, the first one. The followings are my works:
 
 1. [Project presentation](https://github.com/ygeunkim/ecg-experiment/blob/master/static/slides/youngslide.pdf)
-2. Report (Still working)
+2. [Appendix](https://github.com/ygeunkim/ecg-experiment/blob/master/static/appendix/youngsuppl.pdf)
 
 ## Goal of the Experiment
 

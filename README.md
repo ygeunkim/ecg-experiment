@@ -17,7 +17,7 @@ works:
 
 1.  [Project
     presentation](https://github.com/ygeunkim/ecg-experiment/blob/master/static/slides/youngslide.pdf)
-2.  Report (Still working)
+2.  [Appendix](https://github.com/ygeunkim/ecg-experiment/blob/master/static/appendix/youngsuppl.pdf)
 
 ## Goal of the Experiment
 
