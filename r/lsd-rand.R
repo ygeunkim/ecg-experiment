@@ -32,10 +32,11 @@ permute_lsd <- function(n, size, fact_name = c("row", "col", "trt"), ...) {
 # x: imputed science table
 # y_obs: Observed output
 # LSD using rlatin
-test_sharp <- function(x, y_obs, B = 1000, size = 4, fact_name = c("row", "col", "trt"), mc_core = 8) {
+test_sharp <- function(x, y_obs, B = 1000, size = 4, fact_name = c("row", "col", "trt"), mc_core = 8, seed = 1) {
   row_obs <- x[[fact_name[1]]]
   col_obs <- x[[fact_name[2]]]
   trt_obs <- x[[fact_name[3]]]
+  set.seed(seed)
   # permutation----------------------
   doMC::registerDoMC(cores = mc_core)
   foreach(b = seq_len(B), .combine = c) %dopar% {
