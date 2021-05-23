@@ -216,10 +216,10 @@ sample(LETTERS[1:4])
 ```
 
 \begin{enumerate}[A]
-  \item House blend (74.5 mg) to `1`
-  \item Water (0 mg) to `4`
-  \item Sumatra (54.5 mg) to `2`
-  \item Decaf espresso roast (3 mg) to `3`
+  \item House blend (74.5 mg) to \texttt{1}
+  \item Water (0 mg) to \texttt{4}
+  \item Sumatra (54.5 mg) to \texttt{2}
+  \item Decaf espresso roast (3 mg) to \texttt{3}
 \end{enumerate}
 
 ## Latin Square
@@ -485,6 +485,7 @@ ecg_gam %>%
 
 - Monotonous, but reverse direction to our original idea
 - $SSCol = 4 \sum \hat\gamma_c^2 = `r sum(ecg_gam$gamhat^2) * 4`$
+- $SSRow > SSCol$
 
 ## ANOVA
 
@@ -515,7 +516,7 @@ print_anova(ecg_aov, format = kable_format, caption = "ANOVA Table") %>%
 
 - of **no effect**
 - \textcolor{blue}{$H_0: y_{rc}(1) = y_{rc}(2) = y_{rc}(3) = y_{rc}(4)$}
-- for all $r, c$
+- for each $(r, c)$ pair
 
 ### Imputing
 
@@ -627,28 +628,41 @@ tibble(f_stat = f_tre) %>%
 - We expected the effect was significant
 - However, there was *no significant evidence* (p-value of `r p_val`) \emoji{sob}
 
-## Discussion
-
-Why this result?
+## Discussion: Why this result?
 
 - Caffeine **tolerance**
     - I have taken coffee everyday
     - Was coffee I have taken too small?
-- **Outliers**
-    - Unit `8` seems outliers
-    - Table \@ref(tab:diffdata): value of `r ecg_diff$diff[8]`
+- Variability: The first treatment (`HB`) seem too variable
+
+```{r ecgvarfig, echo=FALSE, fig.cap="Box Plot for each Treatment"}
+ecg_diff %>% 
+  ggplot(aes(x = coffee)) +
+  geom_boxplot(aes(y = diff, group = coffee)) + 
+  geom_point(aes(y = diff, colour = factor(coffee)), show.legend = FALSE) +
+  labs(
+    x = "Coffee (Treatment in LSD)",
+    y = element_blank()
+  ) +
+  theme_minimal()
+```
 
 ## Future study
 
 ```{r toytest, include=FALSE, cache=TRUE}
 # Toy------------------------------------
-new_val <- 10
+new_val1 <- 10
+new_val2 <- 3
 ecg_hb <- 
   ecg_diff %>% 
-  mutate(diff = replace(diff, water == 2 & speed == 4 & coffee == 1, new_val))
+  mutate(
+    diff = replace(diff, water == 2 & speed == 4 & coffee == 1, new_val1),
+    diff = replace(diff, water == 3 & speed == 3 & coffee == 1, new_val2)
+  )
 sharp_hb <- 
   ecg_sharp %>% 
-  mutate_at(vars(HB, W, S, De), ~replace(., water == 2 & speed == 4 & coffee == 1, new_val))
+  mutate_at(vars(HB, W, S, De), ~replace(., water == 2 & speed == 4 & coffee == 1, new_val1)) %>% 
+  mutate_at(vars(HB, W, S, De), ~replace(., water == 3 & speed == 3 & coffee == 1, new_val2))
 # anova with changed value----------------
 hb_anova <- aov_lsd(
   diff ~ water + speed + coffee,
@@ -660,13 +674,29 @@ hb_tre <- test_sharp(sharp_hb, ecg_hb$diff, num_iter, 4, c("water", "speed", "co
 hb_pval <- sum(hb_tre >= hb_aov$statistic[3]) / num_iter
 ```
 
-- Other samples: Fix arbitrary levels
+- Other samples: Correct arbitrarily set levels
     - Re-define the levels of each factor
-- Re-measure (for Unit `8`)
-    - Figure \@ref(fig:hbrand): Change $y_{24} = `r ecg_diff$diff[8]`$ to `r new_val`
-    - P-value becomes `r hb_pval` \emoji{partying-face}
+- Re-measure (for Unit `8` and `11`)
+    - Change $y_{24} = `r ecg_diff$diff[8]`$ to `r new_val1` and $y_{24} = `r ecg_diff$diff[11]`$ to `r new_val2`
 
-```{r hbrand, echo=FALSE, fig.cap="If (2,4) were the different value \\emoji{thinking}"}
+```{r hbvar, echo=FALSE, fig.cap="Pseudo-dataset - (2,4) and (3,3) changed"}
+ecg_hb %>% 
+  ggplot(aes(x = coffee)) +
+  geom_boxplot(aes(y = diff, group = coffee)) + 
+  geom_point(aes(y = diff, colour = factor(coffee)), show.legend = FALSE) +
+  labs(
+    x = "Coffee (Treatment in LSD)",
+    y = element_blank()
+  ) +
+  theme_minimal()
+```
+
+## Then \emoji{face-with-monocle}?
+
+- For the pseudo-dataset,
+- P-value becomes `r hb_pval` \emoji{partying-face}
+
+```{r hbrand, echo=FALSE, fig.cap="If (2,4) and (3,3) were the different values \\emoji{thinking}"}
 tibble(f_stat = hb_tre) %>% 
   ggplot(aes(x = f_stat)) +
   geom_histogram(binwidth = .1) +
@@ -692,7 +722,7 @@ tibble(f_stat = hb_tre) %>%
 
 ### Codes \emoji{laptop}
 
-- My Github repository: `ecg-experiment`
+- My Github repository: `ygeunkim/ecg-experiment`
     - [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment) \emoji{linked-paperclips}
     - includes source codes for this analysis \emoji{toolbox}
     - and R markdown files \emoji{page-with-curl}
