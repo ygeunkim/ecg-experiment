@@ -83,7 +83,7 @@ source("lsd-rand.R")
 
 - \textcolor{red}{Does caffeine causally affect ECG or \it{heart rate}?}
 - Caffeine: \emoji{coffee} *coffee*
-- Output: \emoji{watch} Average heart rate (BPM)
+- Response: \emoji{watch} Average heart rate (BPM)
 
 ::::
 
@@ -207,7 +207,7 @@ knitr::include_graphics("../docs/images/ecg-support-watch.jpg")
 
 ## Randomized Assignment
 
-1. Randomly allocate (`1`, `2`, `3`, `4`) to previous (`A`, `B`, `C`, `D`)
+1. Randomly allocate previous (`1`, `2`, `3`, `4`) to (`A`, `B`, `C`, `D`)
 2. Assign to above Table \@ref(tab:latindesign)
 
 ```{r allocation, cache=TRUE}
@@ -240,10 +240,10 @@ latin %>%
       col == 4 ~ "30<"
     ),
     coffee = case_when(
-      trt == "A" ~ "H(74.5)",
-      trt == "B" ~ "W(0)",
-      trt == "C" ~ "S(54.5)",
-      trt == "D" ~ "D(3)"
+      trt == "A" ~ "HB (74.5)",
+      trt == "B" ~ "W (0)",
+      trt == "C" ~ "S (54.5)",
+      trt == "D" ~ "D (3)"
     )
   ) %>% 
   group_by(Water) %>% 
@@ -255,13 +255,13 @@ latin %>%
   ) %>% 
   kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
   add_header_above(
-    header = c(" " = 1, "Drinking Speed" = 4),
+    header = c(" " = 1, "Drinking Speed (in sec.)" = 4),
     escape = FALSE
   ) %>% 
   footnote(
     number = c(
       "'Water' is the coffee-to-water ratio (divide with 40 ml)",
-      "Numbers in the brackets indicate caffeine (in mg)"
+      "Values in the brackets indicate caffeine (in mg)"
     )
   )
 ```
@@ -411,7 +411,8 @@ ecg_tau %>%
   ) %>% 
   kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
   footnote(
-    "Caffeine: HB > S > D > W"
+    general = "Caffeine: HB > S > D > W",
+    general_title = ""
   )
 ```
 
