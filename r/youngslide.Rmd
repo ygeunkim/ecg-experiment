@@ -216,10 +216,10 @@ sample(LETTERS[1:4])
 ```
 
 \begin{enumerate}[A]
-  \item House blend (74.5 mg) to \texttt{1}
-  \item Water (0 mg) to \texttt{4}
-  \item Sumatra (54.5 mg) to \texttt{2}
-  \item Decaf espresso roast (3 mg) to \texttt{3}
+  \item House blend (74.5 mg) - \texttt{1}
+  \item Water (0 mg) - \texttt{4}
+  \item Sumatra (54.5 mg) - \texttt{2}
+  \item Decaf espresso roast (3 mg) - \texttt{3}
 \end{enumerate}
 
 ## Latin Square
@@ -631,10 +631,10 @@ tibble(f_stat = f_tre) %>%
 
 ## Discussion: Why this result?
 
-- Caffeine **tolerance**
+1. Caffeine **tolerance**
     - I have taken coffee everyday
     - Was coffee I have taken too small?
-- Variability: The first treatment (`HB`) seem too variable
+2. Variability: The first treatment (`HB`) seem too variable
 
 ```{r ecgvarfig, echo=FALSE, fig.cap="Box Plot for each Treatment"}
 ecg_diff %>% 
@@ -675,9 +675,9 @@ hb_tre <- test_sharp(sharp_hb, ecg_hb$diff, num_iter, 4, c("water", "speed", "co
 hb_pval <- sum(hb_tre >= hb_aov$statistic[3]) / num_iter
 ```
 
-- Other samples: Correct arbitrarily set levels
+1. Other samples: Correct arbitrarily set levels
     - Re-define the levels of each factor
-- Re-measure (for Unit `8` and `11`)
+2. Re-measure (for Unit `8` and `11`)
     - Change $y_{24} = `r ecg_diff$diff[8]`$ to `r new_val1` and $y_{24} = `r ecg_diff$diff[11]`$ to `r new_val2`
 
 ```{r hbvar, echo=FALSE, fig.cap="Pseudo-dataset - (2,4) and (3,3) changed"}
