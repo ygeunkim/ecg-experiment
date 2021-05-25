@@ -361,9 +361,9 @@ ecg_diff %>%
 ```
 
 - Each cell: $y_{rc}$
-- Column: $\yrbar$
-- Row: $\ycbar$
-- Grand mean: $\ybar$
+- Column: $\yrbar (\cdot)$
+- Row: $\ycbar (\cdot)$
+- Grand mean: $\ybar (\cdot)$
 - $SSTot = \sum (y_{rc} - \ybar(\cdot))^2 = `r sum((ecg_diff$diff - mean(ecg_diff$diff))^2)`$
 
 ## Unbiased Estimators
