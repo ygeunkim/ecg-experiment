@@ -484,7 +484,7 @@ ecg_gam %>%
   kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position"))
 ```
 
-- Monotonous, but reverse direction to our original idea
+- `30<` has exceptionally large value
 - $SSCol = 4 \sum \hat\gamma_c^2 = `r sum(ecg_gam$gamhat^2) * 4`$
 - $SSRow > SSCol$
 
