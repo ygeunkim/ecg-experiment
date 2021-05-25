@@ -678,7 +678,7 @@ hb_pval <- sum(hb_tre >= hb_aov$statistic[3]) / num_iter
 1. Other samples: Correct arbitrarily set levels
     - Re-define the levels of each factor
 2. Re-measure (for Unit `8` and `11`)
-    - Change $y_{24} = `r ecg_diff$diff[8]`$ to `r new_val1` and $y_{24} = `r ecg_diff$diff[11]`$ to `r new_val2`
+    - Change $y_{24} = `r ecg_diff$diff[8]`$ to `r new_val1` and $y_{33} = `r ecg_diff$diff[11]`$ to `r new_val2`
 
 ```{r hbvar, echo=FALSE, fig.cap="Pseudo-dataset - (2,4) and (3,3) changed"}
 ecg_hb %>% 
