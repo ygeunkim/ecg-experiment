@@ -5,7 +5,7 @@ author: |
   | Young Geun Kim
   | [ygeunkim.github.io](https://ygeunkim.github.io)
 institute: "2019711358, [Department of Statistics](https://stat.skku.edu/stat/index.jsp)"
-date: "`r format(as.Date('2021-05-24'), '%d %b, %Y')`"
+date: "`r format(as.Date('2021-05-25'), '%d %b, %Y')`"
 bibliography: "../docs/ecgref.bib"
 biblio-style: "apalike"
 link-citations: yes
@@ -727,4 +727,65 @@ tibble(f_stat = hb_tre) %>%
     - [https://github.com/ygeunkim/ecg-experiment](https://github.com/ygeunkim/ecg-experiment) \emoji{linked-paperclips}
     - includes source codes for this analysis \emoji{toolbox}
     - and R markdown files \emoji{page-with-curl}
+
+# \emoji{star} Replying Feedbacks \emoji{star}
+
+## Log-return
+
+```{r readlog, message=FALSE, echo=FALSE}
+ecg_log <- read_csv("../data/processed/ecg-logreturn.csv")
+sharp_log <- read_csv("../data/processed/science-sharp-log.csv")
+```
+
+- In case of the difference heart rate, use **log return**
+- i.e. $\log y_{rc}^{post} - \log_{rc}^{pre}$
+
+```{r ecglogfig, echo=FALSE, fig.cap="Box Plot for log return"}
+ecg_log %>% 
+  ggplot(aes(x = coffee)) +
+  geom_boxplot(aes(y = diff, group = coffee)) + 
+  geom_point(aes(y = diff, colour = factor(coffee)), show.legend = FALSE) +
+  labs(
+    x = "Coffee (Treatment in LSD)",
+    y = element_blank()
+  ) +
+  theme_minimal()
+```
+
+## ANOVA Table
+
+```{r loganova, echo=FALSE}
+ecg_loganova <- aov_lsd(
+  diff ~ water + speed + coffee, 
+  data = ecg_log
+)
+ecg_logaov <- broom::tidy(ecg_loganova)
+# print--------------------------
+print_anova(ecg_logaov, format = kable_format, caption = "ANOVA Table") %>% 
+  row_spec(3, color = "red")
+```
+
+- $F_{Tre} = `r ecg_logaov$statistic[3]`$ (cf. raw difference: `r ecg_aov$statistic[3]`)
+- p-value = `r ecg_logaov$p.value[3]`
+
+## Randomization of $F_{Tre}$
+
+```{r feedbacktest, echo=FALSE, cache=TRUE}
+f_feedback <- test_sharp(sharp_log, ecg_log$diff, num_iter, 4, c("water", "speed", "coffee"), 8, 1)
+p_feedback <- sum(f_feedback >= ecg_logaov$statistic[3]) / num_iter
+```
+
+p-value = `r p_feedback`
+
+```{r feedbackhist, echo=FALSE, fig.cap="Randomization Distribution of $F_{Tre}$ under the Null - log return"}
+tibble(f_stat = f_feedback) %>% 
+  ggplot(aes(x = f_stat)) +
+  geom_histogram(binwidth = .1) +
+  geom_vline(xintercept = ecg_logaov$statistic[3], col = I("red")) +
+  theme_minimal() +
+  labs(
+    x = element_blank(),
+    y = "Frequency"
+  )
+```
 
