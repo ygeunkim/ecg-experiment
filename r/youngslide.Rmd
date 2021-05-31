@@ -789,3 +789,9 @@ tibble(f_stat = f_feedback) %>%
   )
 ```
 
+## And another future study...
+
+- Vary the interval between dose and measuring dates
+    - taking care about row factor
+    - coffee-to-water ratio can affect
+

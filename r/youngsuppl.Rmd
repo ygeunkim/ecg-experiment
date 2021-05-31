@@ -207,6 +207,105 @@ ecg_sharp %>%
 
 \newpage
 
+## After Presentation
+
+In general, heart rate variable is used as log scale, i.e. here, log-return.
+
+```{r readlog, message=FALSE, echo=FALSE}
+ecg_log <- read_csv("../data/processed/ecg-logreturn.csv")
+sharp_log <- read_csv("../data/processed/science-sharp-log.csv")
+```
+
+See Table \@ref(tab:logdata).
+
+```{r logdata, echo=FALSE}
+# Print----------------------------------
+ecg_log %>% 
+  select(-id, -date) %>% 
+  mutate(
+    water = case_when(
+      water == 1 ~ "0 ml",
+      water == 2 ~ "100 ml",
+      water == 3 ~ "200 ml",
+      water == 4 ~ "300 ml"
+    ),
+    speed = case_when(
+      speed == 1 ~ "<=5",
+      speed == 2 ~ "5-15",
+      speed == 3 ~ "15-30",
+      speed == 4 ~ "30<"
+    ),
+    coffee = case_when(
+      coffee == 1 ~ "HB",
+      coffee == 2 ~ "S",
+      coffee == 3 ~ "D",
+      coffee == 4 ~ "W"
+    )
+  ) %>% 
+  mutate(
+    diff = cell_spec(
+      diff %>% round(3), 
+      color = spec_color(diff, end = .9, direction = -1),
+      font_size = spec_font_size(diff, begin = 8)
+    )
+  ) %>% 
+  unite(coffee, diff, col = "output", sep = ", ") %>% 
+  group_by(water) %>% 
+  pivot_wider(names_from = speed, values_from = output) %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Experiment Data - log-return for the average heart rate"
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
+  add_header_above(
+    header = c(" " = 1, "Drinking Speed" = 4),
+    escape = FALSE
+  ) %>% 
+  footnote(
+    number = c(
+      "Caffeine: HB > S > D > W",
+      "Numbers indicate the difference after and before taking coffee"
+    )
+  )
+```
+
+Table \@ref(tab:logsharp) is the imputed science table.
+
+```{r logsharp, message=FALSE, echo=FALSE}
+# imputing-------------------------------------------------------------------
+sharp_log %>% 
+  kable(
+    format = kable_format,
+    escape = FALSE,
+    caption = "Imputed Outcomes under the Sharp Null - log-return",
+    longtable = TRUE
+  ) %>% 
+  kable_styling(full_width = FALSE, latex_options = c("striped", "HOLD_position")) %>% 
+  add_header_above(
+    header = c(" " = 4, "Observed $y_{rc}(k)$" = 4),
+    escape = FALSE
+  ) %>% 
+  pack_rows(
+    "Row 1 (Water 0 ml)",
+    1, 4
+  ) %>% 
+  pack_rows(
+    "Row 2 (Water 100 ml)",
+    5, 8
+  ) %>% 
+  pack_rows(
+    "Row 3 (Water 200 ml)",
+    9, 12
+  ) %>% 
+  pack_rows(
+    "Row 4 (Water 300 ml)",
+    13, 16
+  )
+```
+
+\newpage
+
 # ECG Results
 
 From ECG app, we get the graph as in Figure \@ref(fig:resplot).
